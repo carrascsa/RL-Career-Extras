@@ -1,4 +1,4 @@
-﻿**RL Career Extras** is a free add-on for RL Career Hub that adds new career systems, a world-rankings hub and a live match caster. It runs alongside your install without modifying any game files. 🧪 **Playtest build: testers wanted!**
+**RL Career Extras** is a free add-on for RL Career Hub that adds new career systems, a world-rankings hub and a live match caster. It runs alongside your install without modifying any game files. 🧪 **Playtest build: testers wanted!**
 🏛️ **Club & Career**
 * Hall of Fame: club history, records, legends, 19 achievements
 * Academy: youth intakes, training, B team with its own Development League
