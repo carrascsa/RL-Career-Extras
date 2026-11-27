@@ -67,7 +67,7 @@
 
   const CSS = `
   .content > .xt,.content > .hof{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-right:8px}
-  /* our tab buttons are a bit narrower so the Hub's own tabs (and Career+) still fit */
+  /* our tab buttons are a bit narrower so the Hub's own tabs still fit */
   .xt-tb{padding-left:9px!important;padding-right:9px!important;letter-spacing:.03em!important}
   @media (max-width:1500px){.xt-tb{padding-left:7px!important;padding-right:7px!important;font-size:.92em!important}}
   .xt{--a1:#5eead4;--a2:#0d9488;--card:rgba(14,20,32,.88);--line:rgba(94,234,212,.18);color:#e8eef7;padding:6px 2px 30px}

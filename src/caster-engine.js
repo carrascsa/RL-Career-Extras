@@ -157,9 +157,8 @@ function buildScript(state, fx, lang) {
   say('pbp', fill(pick('open'), P), { clock: '', score: [0, 0], series: [0, 0], game: 0 });
   say('color', fill(pick('openColor'), P));
   const feud = state.xtra && state.xtra.drama && state.xtra.drama.feud;
-  const cpR = state.cpY && state.cpY.rivalries;
   const other = fx.homeId === state.userTeamId ? fx.awayId : fx.awayId === state.userTeamId ? fx.homeId : null;
-  if (other != null && ((feud && feud.oppId === other) || (cpR && cpR[other] && U.num(cpR[other].heat) >= 60))) say('color', pick('rivalry'));
+  if (other != null && feud && feud.oppId === other) say('color', pick('rivalry'));
 
   let sh = 0; let sa = 0;
   fx.games.forEach((g, gi) => {

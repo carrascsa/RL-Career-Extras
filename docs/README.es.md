@@ -81,7 +81,7 @@ Una pestaña nueva con cuatro secciones:
 Una pestaña para volver a ver cualquier serie de tu club (y las finales grandes) con relato:
 - Dos casters inventados: **Max "Turbo" Reyes** (relator) y **Leo "Nova" Vos** (comentarista).
 - Marcador en vivo con reloj, games de la serie y destello en cada gol; abajo, el relato completo.
-- Usa los datos reales del partido: goleadores, atajadas, demoliciones, tiros, alargues, resultado de la serie y MVP. También menciona rivalidades (peleas en Y o de Career+). El Hub no guarda el minuto de cada gol, así que el orden y el reloj se reconstruyen para que cuadren con el resultado.
+- Usa los datos reales del partido: goleadores, atajadas, demoliciones, tiros, alargues, resultado de la serie y MVP. También menciona rivalidades (peleas en Y). El Hub no guarda el minuto de cada gol, así que el orden y el reloj se reconstruyen para que cuadren con el resultado.
 - **Voz**: lee el relato con las voces de Windows (sin internet). Podés elegir una voz para cada caster, la velocidad, o dejarlo en solo texto. Idioma del relato: igual que el Hub, inglés o español (para español hace falta tener una voz en español instalada en Windows).
 
 ### 🔴 Caster en vivo (mientras jugás)
@@ -112,14 +112,14 @@ Max y Leo tienen voces propias, diseñadas con ElevenLabs para este addon (no so
 
 Los avisos importantes llegan a la **bandeja de entrada** del Hub (mensajes tipo "board", que no frenan el avance de días).
 
-Probado con **RL Career Hub 0.2.0-beta.33**. Funciona junto con **RL Career+**. Solo en carreras de manager: en modo jugador, la cantera, el vestuario y el inversor se apagan.
+Probado con **RL Career Hub 0.2.0-beta.33**. Es independiente: no necesita ni carga otros addons. Solo en carreras de manager: en modo jugador, la cantera, el vestuario y el inversor se apagan.
 
 ## Uso
 
 1. Cerrá RL Career Hub.
 2. Doble clic en **`Iniciar RL Career Extras.cmd`**.
    - Busca el Hub en la carpeta de arriba, en `C:\Program Files\RL Career Hub` o en `%LOCALAPPDATA%\Programs`. Si está en otro lado, escribí la ruta completa del `.exe` en un `hub-path.txt` al lado del `.cmd`.
-   - Si RL Career+ está instalado (`%LOCALAPPDATA%\RLCareerPlus`), se carga también. Sin Career+: `Iniciar RL Career Extras.cmd --no-careerplus`.
+   - Solo carga RL Career Extras. Para uso personal, `Iniciar RL Career Extras.cmd --with-careerplus` carga además un RL Career+ que ya tengas instalado.
    - Si el Hub se actualiza a otra versión, el addon no se activa (para no romper nada). Para probar igual: `Iniciar RL Career Extras.cmd --force`.
 
 El Salón de la Fama registra desde la temporada en curso (el juego no guarda el detalle de temporadas anteriores). La cantera arranca con su primera camada el día que abrís la carrera con el addon.

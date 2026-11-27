@@ -1,6 +1,5 @@
 @echo off
-rem RL Career Extras - starts RL Career Hub with the add-on (and RL Career+ if it is installed).
-rem   Start RL Career Extras.cmd --no-careerplus   start without RL Career+
+rem RL Career Extras - starts RL Career Hub with the add-on (standalone: no other add-on is loaded).
 rem   Start RL Career Extras.cmd --force           try with an untested RL Career Hub version
 setlocal
 title RL Career Extras

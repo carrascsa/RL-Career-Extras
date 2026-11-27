@@ -24,7 +24,7 @@ labels: bug
 **Setup**
 - RL Career Extras version: <!-- see VERSION.txt in %LOCALAPPDATA%\RLCareerExtras -->
 - RL Career Hub version:
-- RL Career+ installed: yes / no
+- Other add-ons installed (which):
 - Manager or player career:
 
 **Log**

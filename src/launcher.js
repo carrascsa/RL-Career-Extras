@@ -1,6 +1,7 @@
 'use strict';
 // Starts RL Career Hub with --inspect, loads inproc.js into its main process, then closes the inspector.
-// If RL Career+ is installed (%LOCALAPPDATA%\RLCareerPlus) it is attached too, so both add-ons run together.
+// Standalone: only RL Career Extras is loaded. Other add-ons are never loaded unless you ask for it with
+// --with-careerplus (loads an RL Career+ already installed in %LOCALAPPDATA%\RLCareerPlus; personal use only).
 // Inspector/WebSocket approach adapted from RL Career+ (MIT License).
 // Run with the Hub's own Electron as Node:  set ELECTRON_RUN_AS_NODE=1 & "RL Career Hub.exe" launcher.js "<path to RL Career Hub.exe>"
 const { spawn } = require('child_process');
@@ -25,7 +26,7 @@ const CANDIDATE_EXES = [
 ].filter(Boolean);
 
 const CAREER_PLUS = path.join(process.env.LOCALAPPDATA || '', 'RLCareerPlus', 'inproc.js');
-const WITH_CAREER_PLUS = !process.argv.includes('--no-careerplus') && fs.existsSync(CAREER_PLUS);
+const WITH_CAREER_PLUS = process.argv.includes('--with-careerplus') && fs.existsSync(CAREER_PLUS);
 
 function findFreePort(preferred) {
   return new Promise((resolve) => {

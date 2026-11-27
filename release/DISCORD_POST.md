@@ -18,8 +18,8 @@
 2. Run `INSTALL.cmd` (finds RL Career Hub automatically)
 3. Play from the new **RL Career Extras** desktop shortcut
 Uninstall: `UNINSTALL.cmd`. Add-on data is stored in your save and ignored by the Hub without it, so **back up `%APPDATA%\rl-career-hub\saves` first**.
-**Compatibility:** ✅ RL Career+ (loads automatically if installed) · ⚠️ other add-ons untested
+**Standalone:** needs and loads no other add-ons
 💬 **Bugs & Feedback**
-Bugs, balance issues, odd texts or how the caster sounds: ping me! Attach `%TEMP%\rlcareerextras.log` and mention if you use Career+.
+Bugs, balance issues, odd texts or how the caster sounds: ping me! Attach `%TEMP%\rlcareerextras.log` and mention if you use other add-ons.
 *Tested on RL Career Hub `0.2.0-beta.33` · Works with existing saves · Unofficial fan project*
 Source code (open source, MIT): https://github.com/carrascsa/RL-Career-Extras

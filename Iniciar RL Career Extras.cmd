@@ -1,5 +1,5 @@
 @echo off
-rem RL Career Extras - starts RL Career Hub with the add-on (Hall of Fame, Academy, Club Life) and RL Career+ if installed.
+rem RL Career Extras - starts RL Career Hub with the add-on only (add --with-careerplus to also load an installed RL Career+).
 setlocal
 set "HUB="
 if exist "%~dp0hub-path.txt" set /p HUB=<"%~dp0hub-path.txt"

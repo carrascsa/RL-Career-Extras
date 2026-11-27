@@ -1,6 +1,6 @@
 # RL Career Extras — playtest build 0.1.0-beta
 
-**RL Career Extras** is a free, unofficial add-on for **RL Career Hub** that adds six new tabs and a live match caster to your career. It runs alongside the game without modifying any of its files, works with **RL Career+**, and supports both the English and Spanish interfaces of the Hub.
+**RL Career Extras** is a free, unofficial add-on for **RL Career Hub** that adds six new tabs and a live match caster to your career. It is **standalone**: it runs alongside the game without modifying any of its files, does not need or load any other add-on, and supports both the English and Spanish interfaces of the Hub.
 
 > **This is a playtest build.** Everything below works in our own testing, but it has only been played on a few machines. Please report anything that breaks, feels unbalanced or reads oddly; see [Reporting bugs](#reporting-bugs).
 
@@ -10,7 +10,6 @@
 
 - Windows 10 or 11
 - **RL Career Hub 0.2.0-beta.33**. Other versions are blocked on purpose; see [Known limitations](#known-limitations).
-- *Optional:* RL Career+. If it is installed, both add-ons load together.
 - *Optional, for the live caster:* playing your matches in Rocket League from the Hub, as the Hub normally does through RLBot.
 
 No Node.js, Python or anything else to install: the add-on uses the Electron and Python runtimes that ship with RL Career Hub.
@@ -120,7 +119,7 @@ Please include:
 1. What you were doing, and what you expected to happen.
 2. A screenshot, if it is visual.
 3. The log file `%TEMP%\rlcareerextras.log`. Paste that path into the File Explorer address bar to find it.
-4. Whether RL Career+ is installed.
+4. Whether you also use any other add-on for RL Career Hub.
 
 For live-caster issues, also say roughly at which point of the match it happened: the first game, a later game of the series, overtime, or after leaving the match.
 
@@ -154,7 +153,7 @@ docs/README.es.md    Spanish documentation
 
 ## Credits
 
-- Built for the RL Career Hub community. The launcher approach is adapted from **RL Career+** (MIT license, see `THIRD_PARTY_NOTICES.md`).
+- Built for the RL Career Hub community. The launch approach (a temporary inspector port) is adapted from open-source code under the MIT license, see `THIRD_PARTY_NOTICES.md`.
 - Released under the MIT License (see `LICENSE`).
 - Caster voices and crowd sounds were generated for this project with ElevenLabs. They are original voices, not imitations of real casters.
 - RL Career Extras is an unofficial fan project. It is not affiliated with RL Career Hub, Psyonix or Epic Games.
