@@ -91,6 +91,12 @@ INSTALL.cmd "D:\Games\RL Career Hub\RL Career Hub.exe"
   - Clubs selling their spot to new organizations, and mergers.
   - You can **found your own org** or **absorb a smaller club**.
 - **Player editor:** in a running career, change any player's **name**, **photo** (upload an image) and **PlayStyle**: Bruiser, Relentless, Tiki Taka, Anticipate, Technical or Trickster, each tied to one of the Hub's bots, which is the bot the player uses in real matches. Rating, contract, titles and stats stay the same, and **Restore original** undoes everything. You can also **create players** or **import** a list of them, for example semi-pros who are missing from the game.
+- **My career:** every club you have managed, with:
+  - dates;
+  - whether you were sacked or moved on;
+  - your series record, finals and titles;
+  - a season-by-season list.
+- **1v1 and 2v2 titles:** the winners of each season's Duels and Doubles Championships get a real title. World titles rank above Majors (1v1 < 2v2 < 3v3), and several 3v3 world titles show as **"Nx World Champion"**. Your profile title picks your best one automatically.
 - **Squad and club editor:** set a player's rating, potential, morale, form and age, and your club's budget.
 - **Settings:**
   - **5 themes** that re-colour the whole Hub (Night shift, Carbon, Pitch green, Crimson, Trophy gold), or keep the Hub's own look.
