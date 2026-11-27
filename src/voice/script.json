@@ -1,0 +1,77 @@
+{
+  "note": "What each recorded file says, in order (one clip per line). Lines were recorded with eleven_v3, separated by '...' pauses, and cut by silence. cat = clip kind used by the live caster.",
+  "groups": [
+    { "file": "m_goal1", "who": "pbp", "lines": [
+      ["goal", "GOAL!"], ["goal", "He scores!"], ["goal", "It's in! What a finish!"], ["goal", "Into the back of the net!"],
+      ["goal", "And it's in!"], ["goal", "GOAL! Oh, that is beautiful!"], ["goal", "Buried it!"], ["goal", "He finds the corner!"] ] },
+    { "file": "m_goal2", "who": "pbp", "lines": [
+      ["goal", "Top corner! GOAL!"], ["goal", "That is a screamer!"], ["goal", "No mistake there! GOAL!"], ["goal", "What a strike! It's in!"],
+      ["goal", "Oh, they've done it! GOAL!"], ["goal", "Smashed home!"], ["goal", "Clinical! Absolutely clinical!"], ["goal", "Goal! The crowd is on its feet!"] ] },
+    { "file": "m_special1", "who": "pbp", "lines": [
+      ["AerialGoal", "Out of the sky! Aerial goal!"], ["AerialGoal", "Up, up and IN!"], ["AerialGoal", "What an aerial! GOAL!"], ["AerialGoal", "He flies and he scores!"],
+      ["BicycleGoal", "A bicycle kick! Are you kidding me?!"], ["BicycleGoal", "Bicycle! Oh my word!"],
+      ["LongGoal", "From distance! What a strike!"], ["LongGoal", "All the way from his own half!"], ["LongGoal", "Long range, and it's IN!"] ] },
+    { "file": "m_special2", "who": "pbp", "lines": [
+      ["BackwardsGoal", "Backwards! He scores going the wrong way!"], ["BackwardsGoal", "Reverse, and it goes in! Cheeky!"],
+      ["TurtleGoal", "A turtle goal! On the roof!"], ["TurtleGoal", "Upside down, and it counts!"],
+      ["PoolShot", "Pool shot! Off the other ball!"], ["PoolShot", "Off the ball and in! Pool shot!"],
+      ["BulletGoal", "What a rocket! Unstoppable!"], ["BulletGoal", "That was a missile!"], ["BulletGoal", "Hit like a bullet! GOAL!"] ] },
+    { "file": "m_big", "who": "pbp", "lines": [
+      ["hattrick", "HAT TRICK! That's three!"], ["hattrick", "Three goals! A hat trick!"], ["hattrick", "Hat trick! He is unstoppable today!"],
+      ["OvertimeGoal", "IT'S OVER! Overtime winner!"], ["OvertimeGoal", "Game over! They win it in overtime!"], ["OvertimeGoal", "Sudden death, and that's the end of it!"], ["OvertimeGoal", "OVERTIME WINNER! Unbelievable!"],
+      ["ownGoal", "Oh no! An own goal!"], ["ownGoal", "That one goes in off his own car, own goal."], ["ownGoal", "Disaster! Into his own net!"] ] },
+    { "file": "m_saves", "who": "pbp", "lines": [
+      ["save", "Saved!"], ["save", "Great save!"], ["save", "Stopped!"], ["save", "Kept out!"], ["save", "Denied!"], ["save", "Good stop!"], ["save", "Not today!"], ["save", "Blocked!"] ] },
+    { "file": "m_epic", "who": "pbp", "lines": [
+      ["epicSave", "WHAT A SAVE!"], ["epicSave", "How did he stop that?!"], ["epicSave", "Incredible save!"], ["epicSave", "Are you kidding me? What a save!"],
+      ["epicSave", "Off the line! Unbelievable!"], ["epicSave", "That is a world class save!"] ] },
+    { "file": "m_plays1", "who": "pbp", "lines": [
+      ["demo", "Boom! Demolition!"], ["demo", "He takes him out!"], ["demo", "Demo!"], ["demo", "Gone! Blown up!"], ["demo", "Big demo there!"], ["demo", "He's been demolished!"],
+      ["AerialHit", "Up in the air!"], ["AerialHit", "He goes up for it!"], ["AerialHit", "Aerial play!"], ["AerialHit", "Taking it to the sky!"] ] },
+    { "file": "m_plays2", "who": "pbp", "lines": [
+      ["BicycleHit", "Bicycle touch!"], ["BicycleHit", "Flip reset, and a bicycle touch!"],
+      ["JuggleHit", "Juggling it!"], ["JuggleHit", "Keeping it up in the air!"],
+      ["BulletHit", "Huge hit!"], ["BulletHit", "Massive clear!"], ["BulletHit", "He absolutely smacked that!"],
+      ["shot", "He lets it rip!"], ["shot", "Shot on goal!"], ["shot", "Big shot!"] ] },
+    { "file": "m_flow1", "who": "pbp", "lines": [
+      ["shot", "Hammered toward goal!"], ["shot", "He takes the shot!"],
+      ["start", "We are live! Let's go!"], ["start", "Here we go! Kickoff coming up!"], ["start", "Welcome back, it's game time!"], ["start", "Good evening everybody, and welcome to the arena!"], ["start", "The players are ready, the crowd is ready. Let's play!"] ] },
+    { "file": "m_flow2", "who": "pbp", "lines": [
+      ["kickoff", "Kickoff!"], ["kickoff", "Back to the middle!"], ["kickoff", "Here we go again!"], ["kickoff", "Ball's back in play!"],
+      ["kickoff", "And we go again!"], ["kickoff", "Restart!"], ["kickoff", "Kickoff, here we go!"], ["kickoff", "Off we go!"] ] },
+    { "file": "m_clock", "who": "pbp", "lines": [
+      ["clock60", "One minute left!"], ["clock60", "Sixty seconds to go!"], ["clock60", "Into the final minute!"],
+      ["clock30", "Thirty seconds!"], ["clock30", "Half a minute left!"], ["clock30", "Thirty seconds on the clock!"],
+      ["clock10", "Ten seconds!"], ["clock10", "Final seconds!"], ["clock10", "Ten! Nine! Eight!"] ] },
+    { "file": "m_end", "who": "pbp", "lines": [
+      ["overtime", "We are going to overtime! Next goal wins!"], ["overtime", "Overtime! Sudden death!"], ["overtime", "Nothing to separate them! Overtime!"], ["overtime", "Here we go, overtime. Next goal takes it!"],
+      ["end", "That's the game!"], ["end", "It's over! What a game!"], ["end", "And that's full time!"], ["end", "The clock hits zero, and it's done!"], ["end", "What a game of Rocket League that was!"], ["end", "That's it! It's all over!"] ] },
+    { "file": "m_score1", "who": "pbp", "lines": [
+      ["s1-0", "One nil."], ["s1-1", "One all."], ["s2-0", "Two nil."], ["s2-1", "Two one."], ["s2-2", "Two all."],
+      ["s3-0", "Three nil."], ["s3-1", "Three one."], ["s3-2", "Three two."], ["s3-3", "Three all."], ["s4-0", "Four nil."] ] },
+    { "file": "m_score2", "who": "pbp", "lines": [
+      ["s4-1", "Four one."], ["s4-2", "Four two."], ["s4-3", "Four three."], ["s4-4", "Four all."], ["s5-0", "Five nil."],
+      ["s5-1", "Five one."], ["s5-2", "Five two."], ["s5-3", "Five three."], ["s5-4", "Five four."], ["s5-5", "Five all."] ] },
+    { "file": "l_goal", "who": "color", "lines": [
+      ["assist", "Lovely pass to set that up."], ["assist", "What a setup."], ["assist", "Great work to create that chance."], ["assist", "The pass made that goal."],
+      ["assist", "Unselfish play, and it pays off."], ["assist", "Beautiful passing play."], ["assist", "That's teamwork right there."], ["assist", "Look at the vision on that pass."] ] },
+    { "file": "l_momentum", "who": "color", "lines": [
+      ["leadColor", "And they have the lead now."], ["leadColor", "Big, big goal."], ["leadColor", "They pull ahead!"], ["leadColor", "Huge momentum swing."], ["leadColor", "That changes everything."], ["leadColor", "They're in control now."],
+      ["equalColor", "And we are level!"], ["equalColor", "All square again!"], ["equalColor", "Back on terms!"], ["equalColor", "We have a brand new game!"] ] },
+    { "file": "l_talk", "who": "color", "lines": [
+      ["startColor", "Fifty-fifties will decide this one. Who wants it more?"], ["startColor", "I expect a fast start here."], ["startColor", "Both teams know exactly what's at stake."],
+      ["startColor", "Boost management is going to be key tonight."], ["startColor", "Watch the rotations, that's where this is won."], ["startColor", "This crowd is ready for something special."],
+      ["goalTalk", "The rotation there was perfect."], ["goalTalk", "That's what pressure does to a defense."], ["goalTalk", "They just kept attacking, and it paid off."] ] },
+    { "file": "l_clock", "who": "color", "lines": [
+      ["clockTied", "All tied, anything can happen!"], ["clockTied", "It's anyone's game!"], ["clockTied", "One touch could decide this."],
+      ["clockClose", "Can they find an equaliser?"], ["clockClose", "They just need to hold on now!"], ["clockClose", "The pressure is on now."], ["clockClose", "Everybody forward, they need a goal!"],
+      ["brace", "That's two for him this game."], ["brace", "He is having a day!"], ["brace", "Another one! He's on fire!"] ] },
+    { "file": "l_end", "who": "color", "lines": [
+      ["endMvp", "What a performance from the player of the game."], ["endMvp", "Take a bow, that's an MVP display."], ["endMvp", "One player stood above everyone tonight."], ["endMvp", "That's a player at the top of his game."],
+      ["endSeriesGo", "And the series rolls on."], ["endSeriesGo", "What a series this is turning into."], ["endSeriesGo", "On to the next one."],
+      ["endSeriesWin", "And that takes the series! What a run!"], ["endSeriesWin", "Series over! They've done it!"], ["endSeriesWin", "They close it out! What a series!"] ] },
+    { "file": "l_saves", "who": "color", "lines": [
+      ["saveTalk", "Great positioning on that save."], ["saveTalk", "He read that perfectly."], ["saveTalk", "That's why you stay back post."], ["saveTalk", "The defense is holding firm."],
+      ["demoTalk", "That demo opens up the whole field."], ["demoTalk", "Smart demo, takes a man out of the play."], ["demoTalk", "Physical play here, I love it."] ] }
+  ]
+}

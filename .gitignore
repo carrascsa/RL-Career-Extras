@@ -1,0 +1,15 @@
+# build output (the zip goes to GitHub Releases, not into the repo)
+dist/
+
+# local, per-machine
+hub-path.txt
+*.log
+
+# personal notes
+IDEAS.md
+
+# caches
+__pycache__/
+*.pyc
+node_modules/
+.claude/

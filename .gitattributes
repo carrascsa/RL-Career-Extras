@@ -1,0 +1,7 @@
+* text=auto
+# cmd.exe misreads batch files with Unix line endings
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.mp3 binary
+*.webm binary
+*.zip binary
