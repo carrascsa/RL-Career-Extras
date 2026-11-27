@@ -212,6 +212,37 @@ ok('performance mode: follows the match and can be switched off', async () => {
   assert.ok(!calls.includes('xtrue'));
 });
 
+ok('my career: one line per club, with the reason you left and your record', () => {
+  const s = fresh(); const ctx = mkCtx(); core.tick(s, ctx);
+  const M = () => core.snapshot(s, ctx).mycareer;
+  assert.strictEqual(M().stints.length, 1);
+  assert.strictEqual(M().stints[0].teamId, s.userTeamId);
+  const fx = s.fixtures.find((f) => !f.played && (f.homeId === s.userTeamId || f.awayId === s.userTeamId));
+  fx.played = true; fx.stage = 'final'; const home = fx.homeId === s.userTeamId; fx.homeWins = home ? 3 : 0; fx.awayWins = home ? 0 : 3;
+  core.tick(s, ctx); core.tick(s, ctx);
+  assert.ok(M().stints[0].w === 1 && M().stints[0].finals === 1 && M().stints[0].titles.length === 1, JSON.stringify(M().stints[0]));
+  s.sacked = true; core.tick(s, ctx);
+  assert.strictEqual(M().stints[0].reason, 'sacked');
+  const other = s.teams.find((t) => t.id !== s.userTeamId);
+  s.sacked = false; s.userTeamId = other.id; core.tick(s, ctx);
+  assert.strictEqual(M().stints.length, 2);
+  assert.strictEqual(M().stints[0].team, other.name, 'newest first');
+  assert.strictEqual(M().total.clubs, 2);
+});
+
+ok('titles: 1v1/2v2 championship winners get a title; Nx World Champion ranks first', () => {
+  const s = fresh(); const ctx = mkCtx(); core.tick(s, ctx);
+  const me = s.players.find((p) => p.isUser);
+  me.titles = [{ k: 'major_champion', y: 2026 }, { k: 'worlds_champion', y: 2026 }, { k: 'solo_champion', y: 2027, xt: true }, { k: 'worlds_champion', y: 2027 }];
+  const E = core.snapshot(s, ctx).extras;
+  assert.ok(/2x World Champion/.test(E.title), 'automatic best title: ' + E.title);
+  assert.strictEqual(E.titles[0].k, 'multi');
+  const order = E.titles.map((x) => x.k);
+  assert.ok(order.indexOf('worlds_champion') < order.indexOf('solo_champion') && order.indexOf('solo_champion') < order.indexOf('major_champion'), order.join(','));
+  core.command(s, { m: 'extras', op: 'title', index: 'none' }, ctx);
+  assert.strictEqual(core.snapshot(s, ctx).extras.title, null);
+});
+
 (async () => {
   for (const [name, fn] of queue) { await fn(); passed++; console.log('  ✔ ' + name); }
   console.log(`\n${passed} checks passed.`);

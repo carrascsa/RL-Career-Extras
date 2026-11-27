@@ -10,7 +10,7 @@ const PTS = {
   worlds_champion: 100, worlds_finalist: 45, worlds_elite: 18, worlds_contender: 8,
   season_champion: 70, season_finalist: 30, season_elite: 12,
   major_champion: 45, major_finalist: 20, major_elite: 9, major_contender: 4,
-  solo_champion: 30, regional_champion: 6, regional_finalist: 3, wildcard_contender: 3, contender: 1.5, challenger: 0.5,
+  solo_champion: 30, duo_champion: 35, regional_champion: 6, regional_finalist: 3, wildcard_contender: 3, contender: 1.5, challenger: 0.5,
 };
 const MVP_PTS = 20;
 const cache = new WeakMap();

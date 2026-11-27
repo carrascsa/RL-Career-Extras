@@ -264,6 +264,17 @@ function finish(state, ev, ctx, day) {
   const f = ev.rounds[2] && ev.rounds[2][0];
   const champ = f && ev.field.find((x) => x.key === f.w);
   ev.champion = champ ? champ.name : null;
+  // the season's Duels (1v1) and Doubles (2v2) Championships give a real title to the winners, like RLCS titles
+  if (champ && ev.marquee && Array.isArray(champ.pids)) {
+    const k = ev.format === '1v1' ? 'solo_champion' : ev.format === '2v2' ? 'duo_champion' : null;
+    const y = Number(String(state.currentDate).slice(0, 4)) || 0;
+    if (k) for (const pid of champ.pids) {
+      const p = U.playerOf(state, pid);
+      if (!p) continue;
+      p.titles = Array.isArray(p.titles) ? p.titles : [];
+      if (!p.titles.some((t) => t && t.k === k && t.y === y && t.xt)) p.titles.push({ k, y, xt: true, ev: ev.name });
+    }
+  }
   const c = ensure(state);
   const me = ev.field.find((x) => x.mine);
   if (!me) return;

@@ -20,8 +20,8 @@ const INBOX_KINDS = {
   transfers: (m) => /^(transfer_|offer_|contract_)/.test(String(m.type || '')),
 };
 const TITLE_NAMES = {
-  en: { worlds_champion: 'World Champion', worlds_contender: 'Worlds contender', major_champion: 'Major Champion', major_contender: 'Major contender', regional_champion: 'Regional Champion', contender: 'RLCS contender', challenger: 'RLCS challenger', solo_champion: '1v1 Champion', world_cup: 'World Cup Champion' },
-  es: { worlds_champion: 'Campeón del Mundo', worlds_contender: 'Mundialista', major_champion: 'Campeón de Major', major_contender: 'Jugó un Major', regional_champion: 'Campeón regional', contender: 'Contender RLCS', challenger: 'Challenger RLCS', solo_champion: 'Campeón 1v1', world_cup: 'Campeón de la Copa del Mundo' },
+  en: { worlds_champion: 'World Champion', worlds_contender: 'Worlds contender', major_champion: 'Major Champion', major_contender: 'Major contender', regional_champion: 'Regional Champion', contender: 'RLCS contender', challenger: 'RLCS challenger', solo_champion: '1v1 Champion', duo_champion: '2v2 Champion', world_cup: 'World Cup Champion', multi: '{n}x World Champion' },
+  es: { worlds_champion: 'Campeón del Mundo', worlds_contender: 'Mundialista', major_champion: 'Campeón de Major', major_contender: 'Jugó un Major', regional_champion: 'Campeón regional', contender: 'Contender RLCS', challenger: 'Challenger RLCS', solo_champion: 'Campeón 1v1', duo_champion: 'Campeón 2v2', world_cup: 'Campeón de la Copa del Mundo', multi: '{n}x Campeón del Mundo' },
 };
 
 function ensure(state) {
@@ -93,10 +93,16 @@ function onTick(state, ctx) {
   filterInbox(state);
 }
 
+// title order: any world title above a Major, and 1v1 < 2v2 < 3v3
+const RANK = { multi: 100, worlds_champion: 90, duo_champion: 80, solo_champion: 75, world_cup: 70, major_champion: 60, regional_champion: 40, worlds_contender: 30, major_contender: 20, contender: 10, challenger: 5 };
 function titlesOf(state, lang) {
   const me = state.players.find((p) => p && p.isUser);
   const N = TITLE_NAMES[lang === 'es' ? 'es' : 'en'];
-  return ((me && me.titles) || []).map((t, i) => ({ i, k: t.k, y: t.y, host: t.h || null, name: (N[t.k] || String(t.k).replace(/_/g, ' ')) + ' ' + t.y + (t.h ? ' · ' + t.h : '') }));
+  const list = ((me && me.titles) || []).map((t, i) => ({ i, k: t.k, y: t.y, host: t.h || null, name: (N[t.k] || String(t.k).replace(/_/g, ' ')) + ' ' + t.y + (t.h ? ' · ' + t.h : '') }));
+  // several 3v3 world titles: "Nx World Champion", which outranks everything
+  const worlds = list.filter((t) => t.k === 'worlds_champion').length;
+  if (worlds >= 2) list.push({ i: 'multi', k: 'multi', y: null, host: null, name: N.multi.replace('{n}', worlds), n: worlds });
+  return list.sort((a, b) => (RANK[b.k] || 0) - (RANK[a.k] || 0) || (b.y || 0) - (a.y || 0));
 }
 
 function command(state, cmd, ctx) {
@@ -115,20 +121,26 @@ function command(state, cmd, ctx) {
   if (cmd.op === 'perf') { x.perf = !!cmd.value; return { ok: true }; }
   if (cmd.op === 'title') {
     const list = titlesOf(state, ctx.lang);
-    if (cmd.index == null || cmd.index === '') { delete x.title; return { ok: true }; }
-    const t = list.find((v) => v.i === Number(cmd.index));
+    if (cmd.index == null || cmd.index === '') { delete x.title; x.titleOff = false; return { ok: true }; }
+    if (cmd.index === 'none') { delete x.title; x.titleOff = true; return { ok: true }; }
+    const t = list.find((v) => String(v.i) === String(cmd.index));
     if (!t) return { ok: false, error: es ? 'Ese título no es tuyo.' : 'You have not won that title.' };
-    x.title = { k: t.k, y: t.y, host: t.host };
+    x.title = { k: t.k, y: t.y, host: t.host, n: t.n };
+    x.titleOff = false;
     return { ok: true, name: t.name };
   }
   return { ok: false, error: 'Unknown extras command.' };
 }
 
+// the chosen title, or automatically the best one you have
 function profileTitle(state, lang) {
   const x = state && state.xtra && state.xtra.extras;
-  if (!x || !x.title) return null;
+  if (x && x.titleOff) return null;
   const N = TITLE_NAMES[lang === 'es' ? 'es' : 'en'];
-  return (N[x.title.k] || x.title.k) + ' ' + x.title.y;
+  const t = x && x.title ? x.title : titlesOf(state, lang)[0];
+  if (!t) return null;
+  if (t.k === 'multi') return N.multi.replace('{n}', t.n || titlesOf(state, lang).filter((v) => v.k === 'worlds_champion').length);
+  return (N[t.k] || t.k) + ' ' + t.y;
 }
 
 function snapshot(state, ctx) {
@@ -136,7 +148,7 @@ function snapshot(state, ctx) {
   const me = state.players.find((p) => p && p.isUser);
   return {
     autotrain: x.autotrain, assistantAuto: !!Perks.perk(state, 'assistant', 'autoTrain'), inbox: x.inbox, perf: x.perf,
-    me: me ? me.name : null, titles: titlesOf(state, ctx.lang), title: profileTitle(state, ctx.lang),
+    me: me ? me.name : null, titles: titlesOf(state, ctx.lang), title: profileTitle(state, ctx.lang), picked: !!x.title,
     manager: !(ctx.engine && typeof ctx.engine.isPlayerCareer === 'function' && ctx.engine.isPlayerCareer(state)),
   };
 }

@@ -9,7 +9,7 @@ const MODULES = [
   require('./world-engine'), require('./circuit-engine'), require('./freestyle-engine'), require('./talk-engine'),
   require('./travel-engine'), require('./awards-engine'), require('./sponsor-engine'), require('./wellbeing-engine'),
   require('./y-engine'), require('./prospects-engine'), require('./drama-engine'), require('./ranking-engine'), require('./caster-engine'),
-  require('./editor-engine'), require('./staff-engine'), require('./recruit-engine'), require('./matchsim-engine'), require('./extras-engine'),
+  require('./editor-engine'), require('./staff-engine'), require('./recruit-engine'), require('./matchsim-engine'), require('./extras-engine'), require('./mycareer-engine'),
 ];
 const MAX_CATCHUP_DAYS = 400;
 

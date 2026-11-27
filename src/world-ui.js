@@ -10,13 +10,13 @@
   const D = {
     en: {
       tab: 'RL World', title: 'RL World', sub: 'Rankings, prospects, drama, orgs and your mods',
-      v_top: 'World top', v_prospects: 'Prospects', v_drama: 'Drama & orgs', v_mods: 'Mods', v_editor: 'Player editor', v_settings: 'Settings',
+      v_top: 'World top', v_prospects: 'Prospects', v_drama: 'Drama & orgs', v_mods: 'Mods', v_editor: 'Player editor', v_settings: 'Settings', v_career: 'My career', mc_info: 'Every club you have managed in this save.', mc_now: 'now', mc_sacked: 'Sacked', mc_moved: 'Moved on', mc_current: 'Current club', mc_record: '{w}W {l}L series', mc_finals: '{n} finals', mc_titles: 'Titles', mc_seasons: 'Season by season', mc_season: 'Season {n}', mc_total: '{c} clubs · {w}W {l}L · {t} titles',
       st_theme: 'Theme', st_themeInfo: 'Re-colours the whole Hub. Your PC only.', st_hubTheme: 'Hub default', st_popups: 'Pop-ups', st_hubToasts: 'Hub pop-up notifications', st_xtToasts: 'Career Extras pop-ups',
       st_show: 'Show', st_hide: 'Hide', st_inbox: 'Inbox: mark as read automatically', st_inboxInfo: 'Messages that still need an answer are never touched.',
       ib_extras: 'Career Extras messages', ib_news: 'News', ib_promises: 'Promises', ib_scouting: 'Scout reports', ib_transfers: 'Offers, transfers and contracts',
       st_train: 'Auto-training', st_trainInfo: 'Runs each training session as soon as it is available, with the players who can still grow.', st_skip: 'Skip players at their potential', st_catch: 'Catch up on sessions missed while simulating several days',
       st_trainBy: 'Your Best assistant coach is already training for you.', st_sessions: 'Sessions so far: {n}', st_perf: 'Performance mode in real matches', st_perfInfo: 'While you play: Rocket League gets a higher CPU priority and the Hub stops animating in the background.',
-      st_profile: 'Profile title', st_profileInfo: 'One of the titles your player has won, shown next to your name in the add-on.', st_noTitle: 'No title', st_noTitles: 'Win something first!', on2: 'On', off2: 'Off',
+      st_profile: 'Profile title', st_profileInfo: 'One of the titles your player has won, shown next to your name in the add-on.', st_noTitle: 'No title', st_autoTitle: 'Automatic (best title)', st_noTitles: 'Win something first!', on2: 'On', off2: 'Off',
       ed_stats: 'Rating · potential · morale · form · age', ed_saveStats: 'Save stats', ed_budget: 'Club budget', ed_saveBudget: 'Set budget', ed_statsDone: 'Stats saved', ed_budgetDone: 'Budget updated',
       ed_info: 'Change any player\'s name, photo and PlayStyle (the bot he plays as in real Rocket League matches). Everything else stays: rating, contract, titles and stats.',
       ed_search: 'Search a player', ed_go: 'Search', ed_team: 'Team', ed_myteam: 'My team', ed_edit: 'Edit', ed_name: 'Name', ed_saveName: 'Save name',
@@ -50,13 +50,13 @@
     },
     es: {
       tab: 'Mundo RL', title: 'Mundo RL', sub: 'Rankings, promesas, drama, organizaciones y tus mods',
-      v_top: 'Top mundial', v_prospects: 'Promesas', v_drama: 'Drama y orgs', v_mods: 'Mods', v_editor: 'Editor de jugadores', v_settings: 'Ajustes',
+      v_top: 'Top mundial', v_prospects: 'Promesas', v_drama: 'Drama y orgs', v_mods: 'Mods', v_editor: 'Editor de jugadores', v_settings: 'Ajustes', v_career: 'Mi carrera', mc_info: 'Todos los clubes que dirigiste en esta partida.', mc_now: 'hoy', mc_sacked: 'Despedido', mc_moved: 'Se fue', mc_current: 'Club actual', mc_record: '{w}G {l}P en series', mc_finals: '{n} finales', mc_titles: 'Títulos', mc_seasons: 'Temporada por temporada', mc_season: 'Temporada {n}', mc_total: '{c} clubes · {w}G {l}P · {t} títulos',
       st_theme: 'Tema', st_themeInfo: 'Cambia los colores de todo el Hub. Solo en tu PC.', st_hubTheme: 'El del Hub', st_popups: 'Avisos emergentes', st_hubToasts: 'Avisos emergentes del Hub', st_xtToasts: 'Avisos de Career Extras',
       st_show: 'Mostrar', st_hide: 'Ocultar', st_inbox: 'Bandeja: marcar como leído automáticamente', st_inboxInfo: 'Los mensajes que todavía necesitan una respuesta nunca se tocan.',
       ib_extras: 'Mensajes de Career Extras', ib_news: 'Noticias', ib_promises: 'Promesas', ib_scouting: 'Informes de scouts', ib_transfers: 'Ofertas, traspasos y contratos',
       st_train: 'Entrenamiento automático', st_trainInfo: 'Hace cada sesión apenas está disponible, con los jugadores que todavía pueden crecer.', st_skip: 'Saltear a los que llegaron a su potencial', st_catch: 'Recuperar las sesiones perdidas al simular varios días',
       st_trainBy: 'Tu asistente técnico (el mejor) ya entrena por vos.', st_sessions: 'Sesiones hechas: {n}', st_perf: 'Modo rendimiento en los partidos reales', st_perfInfo: 'Mientras jugás: Rocket League tiene más prioridad de CPU y el Hub deja de animarse de fondo.',
-      st_profile: 'Título de perfil', st_profileInfo: 'Uno de los títulos que ganó tu jugador, al lado de tu nombre en el addon.', st_noTitle: 'Sin título', st_noTitles: '¡Primero ganá algo!', on2: 'Prendido', off2: 'Apagado',
+      st_profile: 'Título de perfil', st_profileInfo: 'Uno de los títulos que ganó tu jugador, al lado de tu nombre en el addon.', st_noTitle: 'Sin título', st_autoTitle: 'Automático (el mejor)', st_noTitles: '¡Primero ganá algo!', on2: 'Prendido', off2: 'Apagado',
       ed_stats: 'Nivel · potencial · moral · forma · edad', ed_saveStats: 'Guardar', ed_budget: 'Presupuesto del club', ed_saveBudget: 'Fijar presupuesto', ed_statsDone: 'Datos guardados', ed_budgetDone: 'Presupuesto actualizado',
       ed_info: 'Cambiá el nombre, la foto y el estilo de juego (el bot con el que juega en los partidos reales) de cualquier jugador. Todo lo demás queda igual: nivel, contrato, títulos y estadísticas.',
       ed_search: 'Buscar un jugador', ed_go: 'Buscar', ed_team: 'Equipo', ed_myteam: 'Mi equipo', ed_edit: 'Editar', ed_name: 'Nombre', ed_saveName: 'Guardar nombre',
@@ -114,6 +114,7 @@
     ['matchsim', '🎮', { en: 'Match simulation', es: 'Simulación de partidos' }, { en: 'Simulate one game of a series, or the rest of a live game you left.', es: 'Simulá un game de la serie, o lo que falta de un game en vivo que dejaste.' }],
     ['editor', '✏️', { en: 'Player editor', es: 'Editor de jugadores' }, { en: 'Rename players, change their photo and PlayStyle.', es: 'Cambiá nombre, foto y estilo de juego de los jugadores.' }],
     ['extras', '⚙️', { en: 'Quality of life', es: 'Comodidades' }, { en: 'Auto-training, inbox filters, profile title and performance mode.', es: 'Entrenamiento automático, filtros de bandeja, título de perfil y modo rendimiento.' }],
+    ['mycareer', '📜', { en: 'My career', es: 'Mi carrera' }, { en: 'Every club you have managed: dates, why you left, record and titles.', es: 'Todos los clubes que dirigiste: fechas, por qué te fuiste, récord y títulos.' }],
     ['ranking', '📊', { en: 'World top', es: 'Top mundial' }, { en: 'All-time and current player rankings.', es: 'Rankings de jugadores históricos y actuales.' }],
   ];
 
@@ -334,7 +335,7 @@
         <div class="xt-muted">${e(t('st_sessions', { n: A.sessions || 0 }))}</div></div>`;
     }
     html += `<div class="xt-card" style="margin-top:12px"><h3>⚡ ${e(t('st_perf'))}</h3><div class="xt-row"><span class="xt-muted">${e(t('st_perfInfo'))}</span>${cmd('perf', { value: !!E.perf })}</div></div>`;
-    const opts = `<option value="">${e(t('st_noTitle'))}</option>` + E.titles.map((x) => `<option value="${x.i}"${E.title && x.name.startsWith(E.title) ? ' selected' : ''}>${e(x.name)}</option>`).join('');
+    const opts = `<option value="">${e(t('st_autoTitle'))}</option><option value="none">${e(t('st_noTitle'))}</option>` + E.titles.map((x) => `<option value="${x.i}"${E.picked && x.name.startsWith(E.title || '~') ? ' selected' : ''}>${e(x.name)}</option>`).join('');
     html += `<div class="xt-card" style="margin-top:12px"><h3>🏅 ${e(t('st_profile'))}</h3><div class="xt-muted" style="margin-bottom:6px">${e(t('st_profileInfo'))}</div>
       ${E.titles.length ? `<div class="xt-row"><span><b>${e(E.me || '')}</b>${E.title ? ` <span class="xt-pill acc">${e(E.title)}</span>` : ''}</span><select id="xt-st-title" style="background:rgba(0,0,0,.35);border:1px solid var(--line);color:#e8eef7;border-radius:8px;padding:6px 8px;font:inherit">${opts}</select></div>` : `<div class="xt-muted">${e(t('st_noTitles'))}</div>`}</div>`;
     return html;
@@ -344,12 +345,22 @@
     if (el && el.id === 'xt-st-title') X.cmd('extras', 'title', { index: el.value });
   }, true);
 
+  function careerView(M) {
+    if (!M) return off('mycareer');
+    const stints = M.stints.map((s) => `<div class="xt-row" style="align-items:flex-start"><span style="flex:1"><b>${e(s.team)}</b> ${s.region ? `<span class="xt-pill">${e(String(s.region).toUpperCase())}</span>` : ''}<br>
+      <span class="xt-muted">${X.fmtDate(s.from)} → ${s.to ? X.fmtDate(s.to) : e(t('mc_now'))} · ${e(t('mc_record', { w: s.w, l: s.l }))} · ${e(t('mc_finals', { n: s.finals }))}</span>${s.titles.length ? `<br>🏆 ${s.titles.map(e).join(' · ')}` : ''}</span>
+      <span class="xt-pill ${s.to ? (s.reason === 'sacked' ? 'bad' : '') : 'acc'}">${e(s.to ? t(s.reason === 'sacked' ? 'mc_sacked' : 'mc_moved') : t('mc_current'))}</span></div>`).join('');
+    const seasons = M.seasons.map((r) => `<div class="xt-row"><span>${e(t('mc_season', { n: r.season }))} · <b>${e(r.team)}</b></span><span class="xt-muted">${e(t('mc_record', { w: r.w, l: r.l }))} · ${e(t('mc_finals', { n: r.finals }))}${r.titles.length ? ' · 🏆 ' + r.titles.length : ''}</span></div>`).join('');
+    return `<div class="xt-card"><h3><span>📜 ${e(t('v_career'))}</span><span class="xt-muted">${e(t('mc_total', { c: M.total.clubs, w: M.total.w, l: M.total.l, t: M.total.titles }))}</span></h3><div class="xt-muted" style="margin-bottom:6px">${e(t('mc_info'))}</div>${stints}</div>
+      <div class="xt-card" style="margin-top:12px"><h3>📅 ${e(t('mc_seasons'))}</h3>${seasons || '<div class="xt-muted">—</div>'}</div>`;
+  }
+
   function page() {
     const s = X.snap();
     if (!s) return '<div class="xt wld"><div class="xt-card xt-muted">…</div></div>';
     const v = X.view(TAB, 'top');
-    const nav = ['top', 'prospects', 'drama', 'editor', 'settings', 'mods'].filter((k) => k !== 'editor' || X.on('editor')).map((k) => `<button class="${v === k ? 'on' : ''}" data-xt-view="${TAB}:${k}">${e(t('v_' + k))}${k === 'drama' && s.drama && s.drama.pending ? ' <span class="xt-tabbadge">1</span>' : ''}</button>`).join('');
-    const body = v === 'prospects' ? prospectsView(s.prospects) : v === 'drama' ? dramaView(s.drama, s.manager !== false) : v === 'mods' ? modsView(s) : v === 'editor' ? (X.on('editor') ? editorView() : off('editor')) : v === 'settings' ? settingsView(s) : topView_(s.ranking);
+    const nav = ['top', 'prospects', 'drama', 'career', 'editor', 'settings', 'mods'].filter((k) => k !== 'editor' || X.on('editor')).map((k) => `<button class="${v === k ? 'on' : ''}" data-xt-view="${TAB}:${k}">${e(t('v_' + k))}${k === 'drama' && s.drama && s.drama.pending ? ' <span class="xt-tabbadge">1</span>' : ''}</button>`).join('');
+    const body = v === 'prospects' ? prospectsView(s.prospects) : v === 'drama' ? dramaView(s.drama, s.manager !== false) : v === 'mods' ? modsView(s) : v === 'editor' ? (X.on('editor') ? editorView() : off('editor')) : v === 'settings' ? settingsView(s) : v === 'career' ? careerView(s.mycareer) : topView_(s.ranking);
     return `<div class="xt wld"><div class="xt-head"><div style="font-size:40px">🌐</div><div class="grow"><div class="xt-h1">${e(t('title'))}</div><div class="xt-h2">${e(t('sub'))}</div></div></div><div class="xt-nav">${nav}</div>${body}</div>`;
   }
 
