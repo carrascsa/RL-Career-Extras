@@ -20,6 +20,9 @@ node test\test_world_modules.js || set FAIL=1
 echo.
 echo === Live caster (observer, composer, live panel) ===
 node test\test_live_caster.js || set FAIL=1
+echo.
+echo === Player editor (name, photo, PlayStyle) ===
+node test\test_editor.js || set FAIL=1
 for %%S in ("%APPDATA%\rl-career-hub\saves\*.json") do (
   echo.
   echo === Season simulation: %%~nxS ===

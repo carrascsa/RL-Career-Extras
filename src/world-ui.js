@@ -10,7 +10,12 @@
   const D = {
     en: {
       tab: 'RL World', title: 'RL World', sub: 'Rankings, prospects, drama, orgs and your mods',
-      v_top: 'World top', v_prospects: 'Prospects', v_drama: 'Drama & orgs', v_mods: 'Mods',
+      v_top: 'World top', v_prospects: 'Prospects', v_drama: 'Drama & orgs', v_mods: 'Mods', v_editor: 'Player editor',
+      ed_info: 'Change any player\'s name, photo and PlayStyle (the bot he plays as in real Rocket League matches). Everything else stays: rating, contract, titles and stats.',
+      ed_search: 'Search a player', ed_go: 'Search', ed_team: 'Team', ed_myteam: 'My team', ed_edit: 'Edit', ed_name: 'Name', ed_saveName: 'Save name',
+      ed_photo: 'Photo', ed_upload: 'Upload image', ed_style: 'PlayStyle', ed_apply: 'Apply', ed_reset: 'Restore original', ed_edited: 'edited',
+      ed_styleInfo: 'Main style · bot · secondary styles. With the Hub\'s V1 bot system (everyone is Nexto) PlayStyles have no effect.',
+      ed_pick: 'Pick a player to edit.', ed_none: 'No players found.', ed_renamed: 'Renamed', ed_styled: 'New PlayStyle', ed_photoDone: 'Photo updated', ed_restored: 'Restored', ed_loading: 'Loading…',
       allTime: 'All-time', current: 'Right now', teams: 'Teams',
       allTimeInfo: 'Every RLCS title counts: the real ones from Liquipedia (Season 1, 2016 → RLCS 2026, shipped with the Hub) plus what is won in this career. Legends who retired before this world starts are listed too.',
       currentInfo: 'Rating, form, this season\'s numbers and titles from the last two years.',
@@ -34,7 +39,12 @@
     },
     es: {
       tab: 'Mundo RL', title: 'Mundo RL', sub: 'Rankings, promesas, drama, organizaciones y tus mods',
-      v_top: 'Top mundial', v_prospects: 'Promesas', v_drama: 'Drama y orgs', v_mods: 'Mods',
+      v_top: 'Top mundial', v_prospects: 'Promesas', v_drama: 'Drama y orgs', v_mods: 'Mods', v_editor: 'Editor de jugadores',
+      ed_info: 'Cambiá el nombre, la foto y el estilo de juego (el bot con el que juega en los partidos reales) de cualquier jugador. Todo lo demás queda igual: nivel, contrato, títulos y estadísticas.',
+      ed_search: 'Buscar un jugador', ed_go: 'Buscar', ed_team: 'Equipo', ed_myteam: 'Mi equipo', ed_edit: 'Editar', ed_name: 'Nombre', ed_saveName: 'Guardar nombre',
+      ed_photo: 'Foto', ed_upload: 'Subir imagen', ed_style: 'Estilo de juego', ed_apply: 'Aplicar', ed_reset: 'Restaurar original', ed_edited: 'editado',
+      ed_styleInfo: 'Estilo principal · bot · estilos secundarios. Con el sistema de bots V1 del Hub (todos son Nexto) el estilo no tiene efecto.',
+      ed_pick: 'Elegí un jugador para editar.', ed_none: 'No hay jugadores.', ed_renamed: 'Nombre cambiado', ed_styled: 'Nuevo estilo', ed_photoDone: 'Foto actualizada', ed_restored: 'Restaurado', ed_loading: 'Cargando…',
       allTime: 'Histórico', current: 'Actual', teams: 'Equipos',
       allTimeInfo: 'Cuenta cada título RLCS: los reales de Liquipedia (Temporada 1, 2016 → RLCS 2026, incluidos en el Hub) más lo que se gane en esta carrera. También figuran las leyendas que ya estaban retiradas cuando empieza este mundo.',
       currentInfo: 'Media, forma, números de esta temporada y títulos de los últimos dos años.',
@@ -77,6 +87,7 @@
     ['prospects', '🌱', { en: 'World prospects', es: 'Promesas mundiales' }, { en: 'New teenage free agents every season and ranked breakouts.', es: 'Adolescentes nuevos como agentes libres cada temporada y revelaciones de ranked.' }],
     ['drama', '🔥', { en: 'Drama & orgs', es: 'Drama y organizaciones' }, { en: 'Controversies, Y beefs, mergers, slot sales and new orgs.', es: 'Polémicas, peleas en Y, fusiones, ventas de plazas y orgs nuevas.' }],
     ['caster', '📺', { en: 'Caster', es: 'Caster' }, { en: 'Replays of your series with two casters, a scoreboard and voice.', es: 'Repeticiones de tus series con dos casters, marcador y voz.' }],
+    ['editor', '✏️', { en: 'Player editor', es: 'Editor de jugadores' }, { en: 'Rename players, change their photo and PlayStyle.', es: 'Cambiá nombre, foto y estilo de juego de los jugadores.' }],
     ['ranking', '📊', { en: 'World top', es: 'Top mundial' }, { en: 'All-time and current player rankings.', es: 'Rankings de jugadores históricos y actuales.' }],
   ];
 
@@ -173,12 +184,92 @@
     return `<div class="xt-card xt-muted">${m ? m[1] + ' ' + e(m[2][L()] || m[2].en) + ' — ' : ''}${e(t('off'))}. <a href="#" data-xt-view="${TAB}:mods">${e(t('v_mods'))}</a></div>`;
   }
 
+  // ---------- player editor ----------
+  const ED = { q: '', teamId: '', rows: null, teams: [], styles: {}, bots: [], sel: null, player: null, loading: false };
+  async function edList() {
+    ED.loading = true;
+    const res = await X.cmd('editor', 'list', { q: ED.q, teamId: ED.teamId });
+    ED.loading = false;
+    if (res && res.ok !== false && res.rows) { ED.rows = res.rows; ED.teams = res.teams || []; ED.styles = res.styles || {}; ED.bots = res.bots || []; }
+    render();
+  }
+  async function edGet(id) {
+    const res = await X.cmd('editor', 'get', { id });
+    if (res && res.player) { ED.sel = id; ED.player = res.player; ED.styles = res.styles || ED.styles; ED.bots = res.bots || ED.bots; }
+    render();
+  }
+  async function edDo(op, args, done) {
+    const res = await X.cmd('editor', op, Object.assign({ id: ED.sel }, args));
+    if (res && res.ok) { if (done) X.toast('✏️', done, res.name || res.botName || ''); await edGet(ED.sel); await edList(); }
+  }
+  // photos are scaled down to 512 px before they are saved
+  function readPhoto(file) {
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onerror = () => reject(fr.error);
+      fr.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('bad image'));
+        img.onload = () => {
+          const k = Math.min(1, 512 / Math.max(img.width, img.height));
+          const c = document.createElement('canvas');
+          c.width = Math.max(1, Math.round(img.width * k)); c.height = Math.max(1, Math.round(img.height * k));
+          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+          resolve(c.toDataURL('image/png'));
+        };
+        img.src = fr.result;
+      };
+      fr.readAsDataURL(file);
+    });
+  }
+  function editorView() {
+    if (ED.rows === null && !ED.loading) setTimeout(edList, 0);
+    const teamOpts = `<option value="">${e(t('ed_myteam'))}</option>` + ED.teams.map((x) => `<option value="${x.id}"${String(ED.teamId) === String(x.id) ? ' selected' : ''}>${e(x.name)}</option>`).join('');
+    const search = `<div class="xt-row" style="gap:8px;flex-wrap:wrap"><input id="xt-ed-q" value="${e(ED.q)}" placeholder="${e(t('ed_search'))}" style="flex:1;min-width:160px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:#e8eef7;border-radius:8px;padding:6px 10px;font:inherit">
+      <button class="xt-btn" data-xt-local="ed:search">🔎 ${e(t('ed_go'))}</button>
+      <select id="xt-ed-team" style="background:rgba(0,0,0,.35);border:1px solid var(--line);color:#e8eef7;border-radius:8px;padding:6px 8px;font:inherit;max-width:220px">${teamOpts}</select></div>`;
+    const rows = ED.rows === null ? `<div class="xt-muted">${e(t('ed_loading'))}</div>` : !ED.rows.length ? `<div class="xt-muted">${e(t('ed_none'))}</div>` : ED.rows.map((r) => `<div class="xt-row"${ED.sel === r.id ? ' style="background:color-mix(in srgb,var(--a1) 12%,transparent);border-radius:8px;padding:4px 6px"' : ''}>
+        <span><b>${e(r.name)}</b>${r.edited ? ` <span class="xt-pill acc">${e(t('ed_edited'))}</span>` : ''}<br><span class="xt-muted">${e(r.team || '—')} · ${r.rating} · ${e(r.styleName || '—')}${r.botName ? ' (' + e(r.botName) + ')' : ''}</span></span>
+        <button class="xt-btn" data-xt-local="ed:sel:${r.id}">✏️ ${e(t('ed_edit'))}</button></div>`).join('');
+    let editor = `<div class="xt-card xt-muted">${e(t('ed_pick'))}</div>`;
+    const P = ED.player;
+    if (P) {
+      const groups = Object.keys(ED.styles).map((k) => {
+        const opts = ED.bots.filter((b) => b.main === k).map((b) => `<option value="${e(b.id)}"${b.id === P.bot ? ' selected' : ''}>${e(ED.styles[k])} · ${e(b.name)}${b.extra.length ? ' · +' + b.extra.map((x) => e(ED.styles[x] || x)).join(', ') : ''}</option>`).join('');
+        return opts ? `<optgroup label="${e(ED.styles[k])}">${opts}</optgroup>` : '';
+      }).join('');
+      const pic = P.photoUrl ? `<img src="${e(P.photoUrl)}" alt="" style="width:96px;height:96px;object-fit:cover;border-radius:12px;border:1px solid var(--line)">` : `<div style="width:96px;height:96px;border-radius:12px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:36px">👤</div>`;
+      const inp = 'background:rgba(0,0,0,.35);border:1px solid var(--line);color:#e8eef7;border-radius:8px;padding:6px 10px;font:inherit';
+      editor = `<div class="xt-card"><h3><span>✏️ ${e(P.name)}</span><span class="xt-muted">${e(P.team || '—')} · ${P.rating} · ${e(P.nation)}</span></h3>
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:center">${pic}
+            <label class="xt-btn" style="cursor:pointer">🖼️ ${e(t('ed_upload'))}<input id="xt-ed-file" type="file" accept="image/png,image/jpeg,image/webp" style="display:none"></label></div>
+          <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:10px">
+            <div class="xt-row" style="gap:8px"><span style="width:110px">${e(t('ed_name'))}</span><input id="xt-ed-name" maxlength="24" value="${e(P.name)}" style="flex:1;${inp}"><button class="xt-btn" data-xt-local="ed:name">💾 ${e(t('ed_saveName'))}</button></div>
+            <div class="xt-row" style="gap:8px"><span style="width:110px">${e(t('ed_style'))}</span><select id="xt-ed-bot" style="flex:1;${inp}">${groups}</select><button class="xt-btn" data-xt-local="ed:style">✔️ ${e(t('ed_apply'))}</button></div>
+            <div class="xt-muted" style="font-size:12px">${e(t('ed_styleInfo'))}</div>
+            ${P.edited ? `<div><button class="xt-btn warn" data-xt-local="ed:reset">↩️ ${e(t('ed_reset'))}</button></div>` : ''}
+          </div></div></div>`;
+    }
+    return `<div class="xt-card" style="margin-bottom:12px"><h3>✏️ ${e(t('v_editor'))}</h3><div class="xt-muted" style="margin-bottom:8px">${e(t('ed_info'))}</div>${search}</div>
+      <div class="xt-grid" style="grid-template-columns:minmax(260px,1fr) 1.6fr;align-items:start"><div class="xt-card">${rows}</div><div>${editor}</div></div>`;
+  }
+  document.addEventListener('change', async (ev) => {
+    const el = ev.target;
+    if (!el || !el.id) return;
+    if (el.id === 'xt-ed-team') { ED.teamId = el.value; ED.q = ''; edList(); }
+    if (el.id === 'xt-ed-file' && el.files && el.files[0] && ED.sel != null) {
+      try { const data = await readPhoto(el.files[0]); await edDo('photo', { data }, t('ed_photoDone')); } catch (err) { X.toast('⚠️', t('ed_photo'), String(err && err.message || err), true); }
+    }
+  }, true);
+  document.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && ev.target && ev.target.id === 'xt-ed-q') { ED.q = ev.target.value; edList(); } }, true);
+
   function page() {
     const s = X.snap();
     if (!s) return '<div class="xt wld"><div class="xt-card xt-muted">…</div></div>';
     const v = X.view(TAB, 'top');
-    const nav = ['top', 'prospects', 'drama', 'mods'].map((k) => `<button class="${v === k ? 'on' : ''}" data-xt-view="${TAB}:${k}">${e(t('v_' + k))}${k === 'drama' && s.drama && s.drama.pending ? ' <span class="xt-tabbadge">1</span>' : ''}</button>`).join('');
-    const body = v === 'prospects' ? prospectsView(s.prospects) : v === 'drama' ? dramaView(s.drama, s.manager !== false) : v === 'mods' ? modsView(s) : topView_(s.ranking);
+    const nav = ['top', 'prospects', 'drama', 'editor', 'mods'].filter((k) => k !== 'editor' || X.on('editor')).map((k) => `<button class="${v === k ? 'on' : ''}" data-xt-view="${TAB}:${k}">${e(t('v_' + k))}${k === 'drama' && s.drama && s.drama.pending ? ' <span class="xt-tabbadge">1</span>' : ''}</button>`).join('');
+    const body = v === 'prospects' ? prospectsView(s.prospects) : v === 'drama' ? dramaView(s.drama, s.manager !== false) : v === 'mods' ? modsView(s) : v === 'editor' ? (X.on('editor') ? editorView() : off('editor')) : topView_(s.ranking);
     return `<div class="xt wld"><div class="xt-head"><div style="font-size:40px">🌐</div><div class="grow"><div class="xt-h1">${e(t('title'))}</div><div class="xt-h2">${e(t('sub'))}</div></div></div><div class="xt-nav">${nav}</div>${body}</div>`;
   }
 
@@ -198,6 +289,11 @@
     render: page,
     local(v) {
       if (v.startsWith('top:')) topView = v.slice(4);
+      if (v === 'ed:search') { const q = document.getElementById('xt-ed-q'); ED.q = q ? q.value : ''; edList(); return; }
+      if (v.startsWith('ed:sel:')) { edGet(Number(v.slice(7))); return; }
+      if (v === 'ed:name') { const n = document.getElementById('xt-ed-name'); edDo('rename', { name: n ? n.value : '' }, t('ed_renamed')); return; }
+      if (v === 'ed:style') { const b = document.getElementById('xt-ed-bot'); edDo('style', { bot: b ? b.value : '' }, t('ed_styled')); return; }
+      if (v === 'ed:reset') { edDo('reset', {}, t('ed_restored')); return; }
       render();
     },
     beforeCmd(m, op, a) {

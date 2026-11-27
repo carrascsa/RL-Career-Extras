@@ -79,6 +79,7 @@ INSTALL.cmd "D:\Games\RL Career Hub\RL Career Hub.exe"
   - Rivalries started on Y that carry into your next series.
   - Clubs selling their spot to new organizations, and mergers.
   - You can **found your own org** or **absorb a smaller club**.
+- **Player editor:** in a running career, change any player's **name**, **photo** (upload an image) and **PlayStyle**: Bruiser, Relentless, Tiki Taka, Anticipate, Technical or Trickster, each tied to one of the Hub's bots, which is the bot the player uses in real matches. Rating, contract, titles and stats stay the same, and **Restore original** undoes everything.
 - **Mod manager:** switch any part of the add-on on or off for each career.
 
 ### 🐦 Livelier Y (the in-game social network)

@@ -74,6 +74,7 @@ Una pestaña nueva con cuatro secciones:
   - **Peleas en Y**: tu jugador contra uno de un rival. Podés pedirle que lo borre o dejar que siga: si sigue, la próxima serie contra ese equipo es una revancha que sube o baja la moral. También hay peleas entre jugadores de otros equipos.
   - **Organizaciones**: clubes débiles venden su plaza a organizaciones nuevas (nombre, sigla, colores y logo nuevos) y a veces dos clubes se **fusionan** (el más fuerte se queda con la figura del otro).
   - Vos podés **fundar una organización** (nombre, sigla y región) y **fusionar** un club más chico de tu región con el tuyo (una vez por temporada: pagás una cuota y te quedás con su mejor jugador y la mitad de sus seguidores).
+- **✏️ Editor de jugadores**: en una carrera empezada, cambiá el **nombre**, la **foto** (subís una imagen) y el **estilo de juego** de cualquier jugador (Bruiser, Relentless, Tiki Taka, Anticipate, Technical o Trickster, cada uno con uno de los bots del Hub, que es con el que juega en los partidos reales). Nivel, contrato, títulos y estadísticas quedan igual, y **Restaurar original** deshace todo.
 - **🧩 Mods**: gestor para prender o apagar cada parte del addon **en esta carrera**. Un módulo apagado deja de correr y esconde sus pantallas; al prenderlo sigue desde hoy.
 
 ## 📺 Caster

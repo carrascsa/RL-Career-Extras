@@ -14,6 +14,10 @@ function findAsar() {
   return cands.find((p) => fs.existsSync(p)) || null;
 }
 
+let lastOut = null;
+// the folder the Hub's js/json files were extracted to (engine/, data/, setup/...)
+function hubDir() { if (!lastOut) loadEngine(); return lastOut; }
+
 function loadEngine() {
   const asar = findAsar();
   if (!asar) throw new Error('app.asar not found (set RLXT_ASAR)');
@@ -46,7 +50,8 @@ function loadEngine() {
       fs.closeSync(fd);
     }
   }
+  lastOut = out;
   return require(path.join(out, 'engine', 'league.js'));
 }
 
-module.exports = { loadEngine, findAsar };
+module.exports = { loadEngine, findAsar, hubDir };
