@@ -79,6 +79,8 @@ Una pestaña nueva con cuatro secciones:
 - **🎮 Serie de hoy** (Club Life): simulá el próximo game y jugá el resto de la serie en vivo; si saliste de un game antes del final, **simulá lo que falta** desde el resultado y el reloj en que lo dejaste.
 - **🌍 Fichajes por región**: los jugadores top de EU y NA piden hasta el doble (o directamente rechazan) para mudarse a una región más chica; los de regiones chicas aceptan con gusto ir a EU/NA.
 - **➕ Crear e importar jugadores** (Editor): para sumar, por ejemplo, semi-pros que no están en el juego.
+- **🛠️ Editor de club y plantel** (Editor): nivel, potencial, moral, forma y edad de cualquier jugador, y el presupuesto de tu club.
+- **⚙️ Ajustes** (RL World): 5 temas que cambian los colores de todo el Hub (Turno noche, Carbono, Verde cancha, Carmesí, Oro de trofeo) o el del Hub; mostrar u ocultar los avisos emergentes del Hub y del addon; filtros de bandeja que marcan como leído (noticias, promesas, informes, ofertas, mensajes del addon) sin tocar lo que necesita respuesta; **entrenamiento automático gratis** (elige a los que pueden crecer, saltea a los que llegaron a su potencial y recupera las sesiones perdidas al simular varios días); **modo rendimiento** (mientras jugás, Rocket League tiene más prioridad de CPU y el Hub deja de animarse); **título de perfil** con uno de tus títulos, que aparece bajo tu nombre en la planilla de estadísticas.
 - **🧩 Mods**: gestor para prender o apagar cada parte del addon **en esta carrera**. Un módulo apagado deja de correr y esconde sus pantallas; al prenderlo sigue desde hoy.
 
 ## 📺 Caster

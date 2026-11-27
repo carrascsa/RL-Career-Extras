@@ -323,7 +323,7 @@ function createLive(opts) {
 
   function onEvent(ev) {
     if (ev.k === 'hello' || ev.k === 'connected' || ev.k === 'disconnected') { log('live caster: ' + JSON.stringify(ev)); return; }
-    if (ev.k === 'idle') { log('live caster: match left'); lastGoal = null; track(ev); send({ lang, event: 'idle', lines: [], unfinished: !!(ev.score && ev.remaining > 0) }); return; }
+    if (ev.k === 'idle') { log('live caster: match left'); lastGoal = null; track(ev); if (opts.onMatch) opts.onMatch(false); send({ lang, event: 'idle', lines: [], unfinished: !!(ev.score && ev.remaining > 0) }); return; }
     const s = settings();
     // the Hub restarts the match for every game of a series: re-read game number and series score
     if (ev.k === 'roster') lastPlayers = ev.players || [];
@@ -333,6 +333,8 @@ function createLive(opts) {
       matchCtx = matchContext(getState(), spec, lastPlayers, s.lang);
     }
     track(ev);
+    // performance mode follows the match: on when it starts, off when it ends or is left
+    if (opts.onMatch) { if (ev.k === 'start' || ev.k === 'roster') opts.onMatch(true); else if (ev.k === 'end') opts.onMatch(false); }
     // broadcast screens after the game (series card + stat sheet), independent of the commentary
     if (ev.k === 'end' && s.broadcast && opts.onEnd) {
       try { opts.onEnd(buildEndScreen(getState(), matchCtx, ev, s.lang)); } catch (e) { log('broadcast data failed: ' + (e && e.message)); }

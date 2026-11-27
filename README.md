@@ -91,6 +91,14 @@ INSTALL.cmd "D:\Games\RL Career Hub\RL Career Hub.exe"
   - Clubs selling their spot to new organizations, and mergers.
   - You can **found your own org** or **absorb a smaller club**.
 - **Player editor:** in a running career, change any player's **name**, **photo** (upload an image) and **PlayStyle**: Bruiser, Relentless, Tiki Taka, Anticipate, Technical or Trickster, each tied to one of the Hub's bots, which is the bot the player uses in real matches. Rating, contract, titles and stats stay the same, and **Restore original** undoes everything. You can also **create players** or **import** a list of them, for example semi-pros who are missing from the game.
+- **Squad and club editor:** set a player's rating, potential, morale, form and age, and your club's budget.
+- **Settings:**
+  - **5 themes** that re-colour the whole Hub (Night shift, Carbon, Pitch green, Crimson, Trophy gold), or keep the Hub's own look.
+  - Show or hide the Hub's pop-ups and the add-on's.
+  - Inbox filters: news, promises, scout reports, offers and add-on messages are marked as read automatically. Anything that still needs an answer is left alone.
+  - **Free auto-training:** it picks the players who can still grow, skips the ones at their potential, and catches up on sessions missed while simulating several days.
+  - **Performance mode:** while you play a real match, Rocket League gets a higher CPU priority and the Hub stops animating in the background.
+  - **Profile title:** pick one of the titles your player has won. It is shown under your name on the post-game stat sheet.
 - **Mod manager:** switch any part of the add-on on or off for each career.
 
 ### 🐦 Livelier Y (the in-game social network)

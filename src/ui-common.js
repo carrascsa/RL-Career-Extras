@@ -24,7 +24,38 @@
     return s;
   }
 
+  // ---------- window preferences: theme and pop-ups (local to this PC) ----------
+  const pref = (k) => { try { return window.localStorage.getItem('xt.' + k) || ''; } catch { return ''; } };
+  const setPref = (k, v) => { try { window.localStorage.setItem('xt.' + k, v); } catch { /* ignore */ } };
+  // RL Career Hub paints everything from the colour tokens in :root, so a theme only re-tunes those.
+  const THEMES = {
+    night: { label: { en: 'Night shift', es: 'Turno noche' }, swatch: '#19b5fe', ground: '#0d1117', panel: '#161b22', panel2: '#1f2630', raise: '#2a3341', raiseLine: '#3b4757', line: '#30363d', dim: '#9aa7b8', accent: '#19b5fe', accentDeep: '#0e8fd1', blue: '#1f3a5f', plate: '#dfe6ee', plateInk: '#0d1117', plateDim: '#3b4757' },
+    carbon: { label: { en: 'Carbon', es: 'Carbono' }, swatch: '#ff7a1a', ground: '#0b0b0c', panel: '#18181b', panel2: '#222226', raise: '#2c2c31', raiseLine: '#44444b', line: '#34343a', dim: '#b4b4bb', accent: '#ff7a1a', accentDeep: '#e0610a', blue: '#3a2a1f', plate: '#ece7e1', plateInk: '#18181b', plateDim: '#44444b' },
+    pitch: { label: { en: 'Pitch green', es: 'Verde cancha' }, swatch: '#2fd18a', ground: '#0b1612', panel: '#12241d', panel2: '#183026', raise: '#1f3d31', raiseLine: '#2f5a48', line: '#24463a', dim: '#a9c7b9', accent: '#2fd18a', accentDeep: '#1fae6f', blue: '#1b3a2e', plate: '#e1efe8', plateInk: '#0b1612', plateDim: '#2f5a48' },
+    crimson: { label: { en: 'Crimson', es: 'Carmesí' }, swatch: '#ff3b5c', ground: '#160b0e', panel: '#241216', panel2: '#2f171d', raise: '#3d1e26', raiseLine: '#5a2b37', line: '#46222c', dim: '#d2aeb6', accent: '#ff3b5c', accentDeep: '#d81f40', blue: '#3a1a24', plate: '#f1e2e6', plateInk: '#160b0e', plateDim: '#5a2b37' },
+    trophy: { label: { en: 'Trophy gold', es: 'Oro de trofeo' }, swatch: '#f5c542', ground: '#12100a', panel: '#1e1a10', panel2: '#282214', raise: '#342c1a', raiseLine: '#514526', line: '#3c3320', dim: '#d6c79c', accent: '#f5c542', accentDeep: '#d9a91c', blue: '#33291a', plate: '#f3ead2', plateInk: '#12100a', plateDim: '#514526' },
+  };
+  function themeCss(T) {
+    return `:root{--ground:${T.ground}!important;--navy-0:${T.ground}!important;--navy-1:${T.panel}!important;--navy-2:${T.panel2}!important;--navy-3:${T.raise}!important;`
+      + `--panel:${T.panel}!important;--panel-2:${T.panel2}!important;--card:${T.panel}!important;--raise:${T.raise}!important;--raise-line:${T.raiseLine}!important;--line:${T.line}!important;`
+      + `--text-dim:${T.dim}!important;--accent:${T.accent}!important;--accent-deep:${T.accentDeep}!important;--tab-line:${T.accentDeep}!important;--blue:${T.blue}!important;`
+      + `--plate:${T.plate}!important;--plate-ink:${T.plateInk}!important;--plate-dim:${T.plateDim}!important}`;
+  }
+  function applyPrefs() {
+    const id = 'xt-theme';
+    let st = document.getElementById(id);
+    const T = THEMES[pref('theme')];
+    const css = (T ? themeCss(T) : '') + (pref('hubToasts') === 'off' ? '#toast-root{display:none!important}' : '') + (pref('matchCalm') === 'on' ? '*{animation-play-state:paused!important;transition:none!important}' : '');
+    if (!css) { if (st) st.remove(); return; }
+    if (!st) { st = document.createElement('style'); st.id = id; document.head.appendChild(st); }
+    st.textContent = css;
+  }
+  // performance mode: the Hub process asks the window to stop animating while you play
+  window.__xtMatchCalm = (on) => { setPref('matchCalm', on ? 'on' : ''); applyPrefs(); return on; };
+  try { applyPrefs(); } catch { /* document not ready */ }
+
   function toast(icon, title, sub, bad) {
+    if (pref('toasts') === 'off' && !bad) return;
     const el = document.createElement('div');
     el.className = 'xt-toast' + (bad ? ' bad' : '');
     el.innerHTML = `<div class="i">${icon}</div><div><div class="k">${e(title)}</div>${sub ? `<div class="n">${e(sub)}</div>` : ''}</div>`;
@@ -53,7 +84,7 @@
   }
 
   const X = window.__xt = {
-    lang, e, money, tr, toast, cmd, tabs,
+    lang, e, money, tr, toast, cmd, tabs, pref, setPref, applyPrefs, THEMES,
     snap: () => (typeof S !== 'undefined' && S && S.xtra) || null,
     // mod manager: is this module switched on in the current career?
     on(id) { const s = X.snap(); const m = s && Array.isArray(s.mods) ? s.mods.find((x) => x.id === id) : null; return !m || m.on !== false; },

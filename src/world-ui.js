@@ -10,7 +10,14 @@
   const D = {
     en: {
       tab: 'RL World', title: 'RL World', sub: 'Rankings, prospects, drama, orgs and your mods',
-      v_top: 'World top', v_prospects: 'Prospects', v_drama: 'Drama & orgs', v_mods: 'Mods', v_editor: 'Player editor',
+      v_top: 'World top', v_prospects: 'Prospects', v_drama: 'Drama & orgs', v_mods: 'Mods', v_editor: 'Player editor', v_settings: 'Settings',
+      st_theme: 'Theme', st_themeInfo: 'Re-colours the whole Hub. Your PC only.', st_hubTheme: 'Hub default', st_popups: 'Pop-ups', st_hubToasts: 'Hub pop-up notifications', st_xtToasts: 'Career Extras pop-ups',
+      st_show: 'Show', st_hide: 'Hide', st_inbox: 'Inbox: mark as read automatically', st_inboxInfo: 'Messages that still need an answer are never touched.',
+      ib_extras: 'Career Extras messages', ib_news: 'News', ib_promises: 'Promises', ib_scouting: 'Scout reports', ib_transfers: 'Offers, transfers and contracts',
+      st_train: 'Auto-training', st_trainInfo: 'Runs each training session as soon as it is available, with the players who can still grow.', st_skip: 'Skip players at their potential', st_catch: 'Catch up on sessions missed while simulating several days',
+      st_trainBy: 'Your Best assistant coach is already training for you.', st_sessions: 'Sessions so far: {n}', st_perf: 'Performance mode in real matches', st_perfInfo: 'While you play: Rocket League gets a higher CPU priority and the Hub stops animating in the background.',
+      st_profile: 'Profile title', st_profileInfo: 'One of the titles your player has won, shown next to your name in the add-on.', st_noTitle: 'No title', st_noTitles: 'Win something first!', on2: 'On', off2: 'Off',
+      ed_stats: 'Rating · potential · morale · form · age', ed_saveStats: 'Save stats', ed_budget: 'Club budget', ed_saveBudget: 'Set budget', ed_statsDone: 'Stats saved', ed_budgetDone: 'Budget updated',
       ed_info: 'Change any player\'s name, photo and PlayStyle (the bot he plays as in real Rocket League matches). Everything else stays: rating, contract, titles and stats.',
       ed_search: 'Search a player', ed_go: 'Search', ed_team: 'Team', ed_myteam: 'My team', ed_edit: 'Edit', ed_name: 'Name', ed_saveName: 'Save name',
       ed_photo: 'Photo', ed_upload: 'Upload image', ed_style: 'PlayStyle', ed_apply: 'Apply', ed_reset: 'Restore original', ed_edited: 'edited',
@@ -43,7 +50,14 @@
     },
     es: {
       tab: 'Mundo RL', title: 'Mundo RL', sub: 'Rankings, promesas, drama, organizaciones y tus mods',
-      v_top: 'Top mundial', v_prospects: 'Promesas', v_drama: 'Drama y orgs', v_mods: 'Mods', v_editor: 'Editor de jugadores',
+      v_top: 'Top mundial', v_prospects: 'Promesas', v_drama: 'Drama y orgs', v_mods: 'Mods', v_editor: 'Editor de jugadores', v_settings: 'Ajustes',
+      st_theme: 'Tema', st_themeInfo: 'Cambia los colores de todo el Hub. Solo en tu PC.', st_hubTheme: 'El del Hub', st_popups: 'Avisos emergentes', st_hubToasts: 'Avisos emergentes del Hub', st_xtToasts: 'Avisos de Career Extras',
+      st_show: 'Mostrar', st_hide: 'Ocultar', st_inbox: 'Bandeja: marcar como leído automáticamente', st_inboxInfo: 'Los mensajes que todavía necesitan una respuesta nunca se tocan.',
+      ib_extras: 'Mensajes de Career Extras', ib_news: 'Noticias', ib_promises: 'Promesas', ib_scouting: 'Informes de scouts', ib_transfers: 'Ofertas, traspasos y contratos',
+      st_train: 'Entrenamiento automático', st_trainInfo: 'Hace cada sesión apenas está disponible, con los jugadores que todavía pueden crecer.', st_skip: 'Saltear a los que llegaron a su potencial', st_catch: 'Recuperar las sesiones perdidas al simular varios días',
+      st_trainBy: 'Tu asistente técnico (el mejor) ya entrena por vos.', st_sessions: 'Sesiones hechas: {n}', st_perf: 'Modo rendimiento en los partidos reales', st_perfInfo: 'Mientras jugás: Rocket League tiene más prioridad de CPU y el Hub deja de animarse de fondo.',
+      st_profile: 'Título de perfil', st_profileInfo: 'Uno de los títulos que ganó tu jugador, al lado de tu nombre en el addon.', st_noTitle: 'Sin título', st_noTitles: '¡Primero ganá algo!', on2: 'Prendido', off2: 'Apagado',
+      ed_stats: 'Nivel · potencial · moral · forma · edad', ed_saveStats: 'Guardar', ed_budget: 'Presupuesto del club', ed_saveBudget: 'Fijar presupuesto', ed_statsDone: 'Datos guardados', ed_budgetDone: 'Presupuesto actualizado',
       ed_info: 'Cambiá el nombre, la foto y el estilo de juego (el bot con el que juega en los partidos reales) de cualquier jugador. Todo lo demás queda igual: nivel, contrato, títulos y estadísticas.',
       ed_search: 'Buscar un jugador', ed_go: 'Buscar', ed_team: 'Equipo', ed_myteam: 'Mi equipo', ed_edit: 'Editar', ed_name: 'Nombre', ed_saveName: 'Guardar nombre',
       ed_photo: 'Foto', ed_upload: 'Subir imagen', ed_style: 'Estilo de juego', ed_apply: 'Aplicar', ed_reset: 'Restaurar original', ed_edited: 'editado',
@@ -99,6 +113,7 @@
     ['recruit', '🌍', { en: 'Regional recruitment', es: 'Fichajes por región' }, { en: 'Top EU/NA players ask for more, or say no, to play in smaller regions.', es: 'Los top de EU/NA piden más, o dicen que no, para jugar en regiones chicas.' }],
     ['matchsim', '🎮', { en: 'Match simulation', es: 'Simulación de partidos' }, { en: 'Simulate one game of a series, or the rest of a live game you left.', es: 'Simulá un game de la serie, o lo que falta de un game en vivo que dejaste.' }],
     ['editor', '✏️', { en: 'Player editor', es: 'Editor de jugadores' }, { en: 'Rename players, change their photo and PlayStyle.', es: 'Cambiá nombre, foto y estilo de juego de los jugadores.' }],
+    ['extras', '⚙️', { en: 'Quality of life', es: 'Comodidades' }, { en: 'Auto-training, inbox filters, profile title and performance mode.', es: 'Entrenamiento automático, filtros de bandeja, título de perfil y modo rendimiento.' }],
     ['ranking', '📊', { en: 'World top', es: 'Top mundial' }, { en: 'All-time and current player rankings.', es: 'Rankings de jugadores históricos y actuales.' }],
   ];
 
@@ -201,7 +216,7 @@
     ED.loading = true;
     const res = await X.cmd('editor', 'list', { q: ED.q, teamId: ED.teamId });
     ED.loading = false;
-    if (res && res.ok !== false && res.rows) { ED.rows = res.rows; ED.teams = res.teams || []; ED.styles = res.styles || {}; ED.bots = res.bots || []; }
+    if (res && res.ok !== false && res.rows) { ED.rows = res.rows; ED.teams = res.teams || []; ED.styles = res.styles || {}; ED.bots = res.bots || []; ED.budget = res.budget; ED.club = res.club; }
     render();
   }
   async function edGet(id) {
@@ -259,6 +274,7 @@
             <div class="xt-row" style="gap:8px"><span style="width:110px">${e(t('ed_name'))}</span><input id="xt-ed-name" maxlength="24" value="${e(P.name)}" style="flex:1;${inp}"><button class="xt-btn" data-xt-local="ed:name">💾 ${e(t('ed_saveName'))}</button></div>
             <div class="xt-row" style="gap:8px"><span style="width:110px">${e(t('ed_style'))}</span><select id="xt-ed-bot" style="flex:1;${inp}">${groups}</select><button class="xt-btn" data-xt-local="ed:style">✔️ ${e(t('ed_apply'))}</button></div>
             <div class="xt-muted" style="font-size:12px">${e(t('ed_styleInfo'))}</div>
+            <div class="xt-row" style="gap:6px;flex-wrap:wrap"><span style="width:110px" class="xt-muted">${e(t('ed_stats'))}</span>${[['rt', P.rating, 40, 99], ['pt', P.potential, 40, 99], ['mo', P.morale, 0, 100], ['fo', P.form, -10, 10], ['ag', P.age, 15, 45]].map(([k, v, a, b]) => `<input id="xt-ed-${k}" type="number" min="${a}" max="${b}" value="${v}" style="width:64px;${inp}">`).join('')}<button class="xt-btn" data-xt-local="ed:stats">💾 ${e(t('ed_saveStats'))}</button></div>
             ${P.edited ? `<div><button class="xt-btn warn" data-xt-local="ed:reset">↩️ ${e(t('ed_reset'))}</button></div>` : ''}
           </div></div></div>`;
     }
@@ -278,8 +294,9 @@
     const importer = `<div class="xt-card" style="margin-top:12px"><h3>📥 ${e(t('im_title'))}</h3><div class="xt-muted" style="margin-bottom:8px">${e(t('im_info'))}</div>
       <textarea id="xt-im-text" rows="7" style="width:100%;box-sizing:border-box;${inp};font-family:Consolas,monospace;font-size:12px">${e(ED.importText != null ? ED.importText : tpl)}</textarea>
       <div style="margin-top:8px"><button class="xt-btn on" data-xt-local="ed:import">📥 ${e(t('im_go'))}</button></div></div>`;
+    const budgetCard = ED.budget != null ? `<div class="xt-card" style="margin-top:12px"><h3>💰 ${e(t('ed_budget'))}${ED.club ? ' · ' + e(ED.club) : ''}</h3><div class="xt-row" style="gap:8px"><span>${e(X.money(ED.budget))}</span><input id="xt-ed-budget" type="number" min="0" step="10000" value="${Math.round(ED.budget)}" style="flex:1;${inp}"><button class="xt-btn" data-xt-local="ed:budget">💾 ${e(t('ed_saveBudget'))}</button></div></div>` : '';
     return `<div class="xt-card" style="margin-bottom:12px"><h3>✏️ ${e(t('v_editor'))}</h3><div class="xt-muted" style="margin-bottom:8px">${e(t('ed_info'))}</div>${search}</div>
-      <div class="xt-grid" style="grid-template-columns:minmax(260px,1fr) 1.6fr;align-items:start"><div class="xt-card">${rows}</div><div>${editor}</div></div>${creator}${importer}`;
+      <div class="xt-grid" style="grid-template-columns:minmax(260px,1fr) 1.6fr;align-items:start"><div class="xt-card">${rows}</div><div>${editor}</div></div>${budgetCard}${creator}${importer}`;
   }
   document.addEventListener('change', async (ev) => {
     const el = ev.target;
@@ -291,12 +308,48 @@
   }, true);
   document.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && ev.target && ev.target.id === 'xt-ed-q') { ED.q = ev.target.value; edList(); } }, true);
 
+  // ---------- settings ----------
+  function settingsView(s) {
+    const E = s.extras;
+    const tog = (on, cmdOn, cmdOff) => `<span class="xt-actions"><button class="xt-btn ${on ? 'on' : ''}" ${cmdOn}>${e(t('on2'))}</button><button class="xt-btn ${!on ? 'on' : ''}" ${cmdOff}>${e(t('off2'))}</button></span>`;
+    const local = (k, on) => tog(on, `data-xt-local="pref:${k}:"`, `data-xt-local="pref:${k}:off"`);
+    const cmd = (op, a1, a0) => tog(a1.value, `data-xt-cmd="extras:${op}" data-xt-args="${args(Object.assign({}, a1, { value: true }))}"`, `data-xt-cmd="extras:${op}" data-xt-args="${args(Object.assign({}, a1, { value: false }))}"`);
+    const cur = X.pref('theme');
+    const themes = `<button class="xt-btn ${!cur ? 'on' : ''}" data-xt-local="pref:theme:">${e(t('st_hubTheme'))}</button>` + Object.entries(X.THEMES).map(([k, T]) => `<button class="xt-btn ${cur === k ? 'on' : ''}" data-xt-local="pref:theme:${k}"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${T.swatch};margin-right:6px"></span>${e(T.label[L()] || T.label.en)}</button>`).join('');
+    let html = `<div class="xt-card"><h3>🎨 ${e(t('st_theme'))}</h3><div class="xt-muted" style="margin-bottom:8px">${e(t('st_themeInfo'))}</div><div class="xt-actions" style="flex-wrap:wrap;justify-content:flex-start">${themes}</div></div>
+      <div class="xt-card" style="margin-top:12px"><h3>🔔 ${e(t('st_popups'))}</h3>
+        <div class="xt-row"><span>${e(t('st_hubToasts'))}</span>${tog(X.pref('hubToasts') !== 'off', 'data-xt-local="pref:hubToasts:"', 'data-xt-local="pref:hubToasts:off"')}</div>
+        <div class="xt-row"><span>${e(t('st_xtToasts'))}</span>${tog(X.pref('toasts') !== 'off', 'data-xt-local="pref:toasts:"', 'data-xt-local="pref:toasts:off"')}</div></div>`;
+    void local;
+    if (!E) return html;
+    const ib = Object.keys(E.inbox).map((k) => `<div class="xt-row"><span>${e(t('ib_' + k))}</span>${cmd('inbox', { kind: k, value: !!E.inbox[k] })}</div>`).join('');
+    html += `<div class="xt-card" style="margin-top:12px"><h3>📬 ${e(t('st_inbox'))}</h3><div class="xt-muted" style="margin-bottom:6px">${e(t('st_inboxInfo'))}</div>${ib}</div>`;
+    if (E.manager) {
+      const A = E.autotrain;
+      const set = (k, v) => `data-xt-cmd="extras:autotrain" data-xt-args="${args({ [k]: v })}"`;
+      html += `<div class="xt-card" style="margin-top:12px"><h3>🏋️ ${e(t('st_train'))}</h3><div class="xt-muted" style="margin-bottom:6px">${e(t('st_trainInfo'))}${E.assistantAuto ? ' ' + e(t('st_trainBy')) : ''}</div>
+        <div class="xt-row"><span>${e(t('st_train'))}</span>${tog(A.on, set('on', true), set('on', false))}</div>
+        <div class="xt-row"><span>${e(t('st_skip'))}</span>${tog(A.skipCapped, set('skipCapped', true), set('skipCapped', false))}</div>
+        <div class="xt-row"><span>${e(t('st_catch'))}</span>${tog(A.catchUp, set('catchUp', true), set('catchUp', false))}</div>
+        <div class="xt-muted">${e(t('st_sessions', { n: A.sessions || 0 }))}</div></div>`;
+    }
+    html += `<div class="xt-card" style="margin-top:12px"><h3>⚡ ${e(t('st_perf'))}</h3><div class="xt-row"><span class="xt-muted">${e(t('st_perfInfo'))}</span>${cmd('perf', { value: !!E.perf })}</div></div>`;
+    const opts = `<option value="">${e(t('st_noTitle'))}</option>` + E.titles.map((x) => `<option value="${x.i}"${E.title && x.name.startsWith(E.title) ? ' selected' : ''}>${e(x.name)}</option>`).join('');
+    html += `<div class="xt-card" style="margin-top:12px"><h3>🏅 ${e(t('st_profile'))}</h3><div class="xt-muted" style="margin-bottom:6px">${e(t('st_profileInfo'))}</div>
+      ${E.titles.length ? `<div class="xt-row"><span><b>${e(E.me || '')}</b>${E.title ? ` <span class="xt-pill acc">${e(E.title)}</span>` : ''}</span><select id="xt-st-title" style="background:rgba(0,0,0,.35);border:1px solid var(--line);color:#e8eef7;border-radius:8px;padding:6px 8px;font:inherit">${opts}</select></div>` : `<div class="xt-muted">${e(t('st_noTitles'))}</div>`}</div>`;
+    return html;
+  }
+  document.addEventListener('change', (ev) => {
+    const el = ev.target;
+    if (el && el.id === 'xt-st-title') X.cmd('extras', 'title', { index: el.value });
+  }, true);
+
   function page() {
     const s = X.snap();
     if (!s) return '<div class="xt wld"><div class="xt-card xt-muted">…</div></div>';
     const v = X.view(TAB, 'top');
-    const nav = ['top', 'prospects', 'drama', 'editor', 'mods'].filter((k) => k !== 'editor' || X.on('editor')).map((k) => `<button class="${v === k ? 'on' : ''}" data-xt-view="${TAB}:${k}">${e(t('v_' + k))}${k === 'drama' && s.drama && s.drama.pending ? ' <span class="xt-tabbadge">1</span>' : ''}</button>`).join('');
-    const body = v === 'prospects' ? prospectsView(s.prospects) : v === 'drama' ? dramaView(s.drama, s.manager !== false) : v === 'mods' ? modsView(s) : v === 'editor' ? (X.on('editor') ? editorView() : off('editor')) : topView_(s.ranking);
+    const nav = ['top', 'prospects', 'drama', 'editor', 'settings', 'mods'].filter((k) => k !== 'editor' || X.on('editor')).map((k) => `<button class="${v === k ? 'on' : ''}" data-xt-view="${TAB}:${k}">${e(t('v_' + k))}${k === 'drama' && s.drama && s.drama.pending ? ' <span class="xt-tabbadge">1</span>' : ''}</button>`).join('');
+    const body = v === 'prospects' ? prospectsView(s.prospects) : v === 'drama' ? dramaView(s.drama, s.manager !== false) : v === 'mods' ? modsView(s) : v === 'editor' ? (X.on('editor') ? editorView() : off('editor')) : v === 'settings' ? settingsView(s) : topView_(s.ranking);
     return `<div class="xt wld"><div class="xt-head"><div style="font-size:40px">🌐</div><div class="grow"><div class="xt-h1">${e(t('title'))}</div><div class="xt-h2">${e(t('sub'))}</div></div></div><div class="xt-nav">${nav}</div>${body}</div>`;
   }
 
@@ -316,6 +369,17 @@
     render: page,
     local(v) {
       if (v.startsWith('top:')) topView = v.slice(4);
+      if (v.startsWith('pref:')) { const [, k, val] = v.split(':'); X.setPref(k, val || ''); X.applyPrefs(); render(); return; }
+      if (v === 'ed:stats') {
+        const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+        edDo('stats', { rating: val('xt-ed-rt'), potential: val('xt-ed-pt'), morale: val('xt-ed-mo'), form: val('xt-ed-fo'), age: val('xt-ed-ag') }, t('ed_statsDone'));
+        return;
+      }
+      if (v === 'ed:budget') {
+        const el = document.getElementById('xt-ed-budget');
+        X.cmd('editor', 'budget', { amount: el ? el.value : '' }).then((res) => { if (res && res.ok) { X.toast('💰', t('ed_budgetDone'), X.money(res.budget)); ED.budget = res.budget; render(); } });
+        return;
+      }
       if (v === 'ed:search') { const q = document.getElementById('xt-ed-q'); ED.q = q ? q.value : ''; edList(); return; }
       if (v.startsWith('ed:sel:')) { edGet(Number(v.slice(7))); return; }
       if (v === 'ed:name') { const n = document.getElementById('xt-ed-name'); edDo('rename', { name: n ? n.value : '' }, t('ed_renamed')); return; }

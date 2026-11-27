@@ -67,29 +67,7 @@ function onDay(state, day, ctx) {
   }
 }
 
-// daily: the Best assistant coach runs training as soon as it is available
-function onTick(state, ctx) {
-  if (!Perks.perk(state, 'assistant', 'autoTrain')) return;
-  const eng = ctx.engine;
-  if (!eng || typeof eng.trainingReady !== 'function' || typeof eng.runTraining !== 'function') return;
-  try {
-    if (!eng.trainingReady(state)) return;
-    const slots = (state.training && state.training.slots) || [];
-    if (!slots.some((x) => x && x.pid != null) && typeof eng.trainableIds === 'function' && typeof eng.setTrainingSlot === 'function') {
-      // nothing planned: train the players with the most room to grow
-      const ids = eng.trainableIds(state).map((id) => U.playerOf(state, id)).filter(Boolean).sort((a, b) => (U.num(b.potential) - U.num(b.rating)) - (U.num(a.potential) - U.num(a.rating))).map((p) => p.id);
-      for (let i = 0; i < 5 && ids.length; i++) eng.setTrainingSlot(state, i, ids[i % ids.length], null);
-    }
-    const r = eng.runTraining(state);
-    if (r && r.ok) {
-      const s = ensure(state);
-      s.autoSessions = (s.autoSessions || 0) + 1;
-      note(state, es(ctx) ? 'El asistente hizo el entrenamiento de la semana.' : 'Your assistant coach ran this week\'s training.');
-    }
-  } catch (e) {
-    ctx.log('staff auto-train: ' + e.message);
-  }
-}
+// the Best assistant coach's auto-training is run by the extras module (one training loop for both)
 
 function command(state, cmd, ctx) {
   const s = ensure(state);
@@ -238,9 +216,9 @@ function snapshot(state, ctx) {
   });
   const scouts = (state.staff || []).filter((x) => x && x.role === 'scout').map((x) => ({ id: x.id, name: x.name, tier: x.tier || 'mid', wage: x.wage }));
   return {
-    roles, scouts, scoutWage: SCOUT_WAGE, bill: s.members.reduce((t, m) => t + U.num(m.wage), 0), log: s.log.slice(0, 8), autoSessions: s.autoSessions || 0,
+    roles, scouts, scoutWage: SCOUT_WAGE, bill: s.members.reduce((t, m) => t + U.num(m.wage), 0), log: s.log.slice(0, 8), autoSessions: (state.xtra.extras && state.xtra.extras.autotrain && state.xtra.extras.autotrain.sessions) || 0,
     facilityTier: Perks.facilityTier(state, ctx), manager: !(ctx.engine && typeof ctx.engine.isPlayerCareer === 'function' && ctx.engine.isPlayerCareer(state)),
   };
 }
 
-module.exports = { id: ID, init, onDay, onTick, command, wrapEngine, snapshot };
+module.exports = { id: ID, init, onDay, command, wrapEngine, snapshot };

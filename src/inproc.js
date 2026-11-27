@@ -182,10 +182,16 @@ function startLiveCaster() {
     const hubWindow = () => BrowserWindow.getAllWindows().find((w) => w && w.webContents && /renderer[\\/]index\.html/.test(w.webContents.getURL()));
     const broadcast = require('./broadcast').createBroadcast({ log });
     ctx.broadcast = broadcast; // for the preview button in the Caster tab
+    const perf = require('./perf').createPerf({
+      log,
+      enabled: () => { const x = liveState && liveState.xtra && liveState.xtra.extras; return !x || x.perf !== false; },
+      calm: (on) => { const w = hubWindow(); if (w) w.webContents.executeJavaScript('window.__xtMatchCalm && window.__xtMatchCalm(' + (on ? 'true' : 'false') + ')').catch(() => {}); },
+    });
     live = require('./live-caster').createLive({
       python,
       log,
       onEnd: (data) => broadcast.showEnd(data),
+      onMatch: (on) => perf.set(on),
       lang: () => ctx.lang,
       getState: () => liveState,
       send: (payload) => {
@@ -195,7 +201,7 @@ function startLiveCaster() {
       },
     });
     live.start();
-    const stop = () => { if (live) live.stop(); broadcast.destroy(); };
+    const stop = () => { if (live) live.stop(); broadcast.destroy(); perf.set(false); };
     app.on('before-quit', stop);
     app.on('will-quit', stop);
     process.on('exit', stop);

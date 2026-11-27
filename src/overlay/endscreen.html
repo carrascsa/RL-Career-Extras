@@ -112,7 +112,7 @@ function statSheet(d) {
   const bp = pad(b.players || []); const op = pad(o.players || []);
   const best = (k) => Math.max(0, ...[...(b.players || []), ...(o.players || [])].map((p) => p[k] || 0));
   const cell = (p, k, side) => p ? `<td class="caps ${p[k] > 0 && p[k] === best(k) ? 'best ' + (side ? 'o' : 'b') : ''}">${p[k]}</td>` : '<td></td>';
-  const name = (p, side) => p ? `<th class="caps ${side ? 'o' : 'b'}"><span class="${p.mvp ? 'mvp' : ''}">${esc(p.name)}</span></th>` : `<th class="${side ? 'o' : 'b'}"></th>`;
+  const name = (p, side) => p ? `<th class="caps ${side ? 'o' : 'b'}"><span class="${p.mvp ? 'mvp' : ''}">${esc(p.name)}</span>${p.title ? `<div style="font-size:1vh;color:#ffd36a;letter-spacing:.08em">${esc(p.title)}</div>` : ''}</th>` : `<th class="${side ? 'o' : 'b'}"></th>`;
   let rows = `<tr>${bp.map((p) => name(p, 0)).join('')}<th class="lbl"></th>${op.map((p) => name(p, 1)).join('')}</tr>`;
   d.labels.rows.forEach(([k, label], i) => {
     rows += `<tr style="transition-delay:${0.15 + i * 0.07}s">${bp.map((p) => cell(p, k, 0)).join('')}<td class="lbl caps">${esc(label)}</td>${op.map((p) => cell(p, k, 1)).join('')}</tr>`;

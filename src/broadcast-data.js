@@ -66,6 +66,10 @@ function buildEndScreen(state, ctx, endEv, lang, fixture) {
     name: nm(p.name), team: Number(p.team) === 1 ? 1 : 0,
     score: U.num(p.score), goals: U.num(p.goals), assists: U.num(p.assists), shots: U.num(p.shots), saves: U.num(p.saves), demos: U.num(p.demos),
   }));
+  // your profile title (RL World → Settings) under your name
+  const me = state && state.players.find((p) => p && p.isUser);
+  const myTitle = me ? require('./extras-engine').profileTitle(state, lang) : null;
+  if (me && myTitle) for (const p of players) if (p.name === me.name) p.title = myTitle;
   const winners = players.filter((p) => p.team === winSide).sort((a, b) => b.score - a.score);
   if (winners[0]) winners[0].mvp = true;
   for (const side of [0, 1]) {

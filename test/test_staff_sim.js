@@ -75,10 +75,11 @@ ok('assistant coach: shorter training cooldown, and the Best one trains on his o
   assert.ok(r && r.ok, JSON.stringify(r));
   assert.strictEqual(engine.trainingDaysLeft(s), 7 - 2, 'cooldown 7 -> 5 days');
   core.command(s, { m: 'staff', op: 'hire', role: 'assistant', tier: 'best' }, ctx);
+  for (const id of engine.trainableIds(s)) { const p = U.playerOf(s, id); p.potential = Math.min(99, Math.floor(U.num(p.ratingExact)) + 5); if (p.potential <= U.num(p.ratingExact)) { p.rating = 90; p.ratingExact = 90; p.potential = 95; } }
   s.training.lastDate = U.addDays(s.currentDate, -30);
   core.tick(s, ctx);
   assert.ok(!engine.trainingReady(s), 'auto-trained');
-  assert.ok(s.xtra.staff.autoSessions >= 1);
+  assert.ok(s.xtra.extras.autotrain.sessions >= 1);
 });
 
 ok('youth coach + facilities: academy intakes get better potential', () => {
@@ -153,6 +154,62 @@ ok('player creator and importer: new free agents with region, rating and PlaySty
   assert.deepStrictEqual(im.made, ['Import One', 'Import Two']);
   assert.strictEqual(im.skipped.length, 2);
   assert.strictEqual(s.players.length, n0 + 3);
+});
+
+ok('extras: free auto-training fills the plan, skips capped players and catches up missed sessions', () => {
+  const s = fresh(); const ctx = mkCtx(); core.tick(s, ctx);
+  core.command(s, { m: 'extras', op: 'autotrain', on: false }, ctx);
+  const ids = engine.trainableIds(s); const cap = U.playerOf(s, ids[0]); const grow = U.playerOf(s, ids[1] != null ? ids[1] : ids[0]);
+  if (grow !== cap) { cap.potential = Math.floor(U.num(cap.ratingExact)); cap.ratingExact = cap.potential; }
+  grow.rating = 85; grow.ratingExact = 85; grow.potential = 95;
+  s.training.lastDate = U.addDays(s.currentDate, -21); // three sessions missed during a long simulation
+  const r = core.command(s, { m: 'extras', op: 'autotrain', on: true }, ctx);
+  assert.ok(r.ok);
+  const trainable = engine.trainableIds(s).map((id) => U.playerOf(s, id)).filter((p) => U.num(p.potential) - U.num(p.ratingExact) > 0.05);
+  if (trainable.length) {
+    assert.ok(r.ran >= 2 && r.ran <= 3, 'caught up: ' + r.ran);
+    const planned = new Set(s.training.slots.map((x) => x && x.pid));
+    assert.ok(!planned.has(cap.id) || cap === grow, cap.name + ' is at his potential and was skipped');
+  }
+  assert.ok(!engine.trainingReady(s));
+});
+
+ok('extras: inbox filters mark chosen categories as read, never ones that need an answer', () => {
+  const s = fresh(); const ctx = mkCtx(); core.tick(s, ctx);
+  s.inbox.push({ id: 1e9, type: 'news', unread: true, title: 'x' }, { id: 1e9 + 1, type: 'board', link: 'xtclublife', unread: true, title: 'y' }, { id: 1e9 + 2, type: 'offer_in', unread: true, resolved: false, title: 'z' });
+  core.command(s, { m: 'extras', op: 'inbox', kind: 'news', value: true }, ctx);
+  core.command(s, { m: 'extras', op: 'inbox', kind: 'transfers', value: true }, ctx);
+  const get = (id) => s.inbox.find((m) => m.id === id);
+  assert.strictEqual(get(1e9).unread, false);
+  assert.strictEqual(get(1e9 + 1).unread, true, 'Career Extras messages not filtered');
+  assert.strictEqual(get(1e9 + 2).unread, true, 'an open offer is never hidden');
+});
+
+ok('extras: profile title from the titles you won; squad and club editor', () => {
+  const s = fresh(); const ctx = mkCtx(); core.tick(s, ctx);
+  const me = s.players.find((p) => p.isUser);
+  me.titles = [{ k: 'major_champion', y: 2026, h: 'Paris' }];
+  assert.ok(core.command(s, { m: 'extras', op: 'title', index: 0 }, ctx).ok);
+  assert.ok(/Major Champion 2026/.test(core.snapshot(s, ctx).extras.title));
+  assert.strictEqual(core.command(s, { m: 'extras', op: 'title', index: 7 }, ctx).ok, false);
+  const p = s.players.find((x) => x.teamId === s.userTeamId && !x.isUser);
+  assert.ok(core.command(s, { m: 'editor', op: 'stats', id: p.id, rating: 88, potential: 95, morale: 100, form: 3, age: 19 }, ctx).ok);
+  assert.ok(p.rating === 88 && p.ratingExact === 88 && p.potential === 95 && p.morale === 100 && p.form === 3 && p.age === 19);
+  core.command(s, { m: 'editor', op: 'stats', id: p.id, rating: 99, potential: 50 }, ctx);
+  assert.strictEqual(p.potential, 99, 'potential never below rating');
+  assert.ok(core.command(s, { m: 'editor', op: 'budget', amount: 1234567 }, ctx).ok);
+  assert.strictEqual(budget(s), 1234567);
+  assert.strictEqual(core.command(s, { m: 'editor', op: 'budget', amount: -5 }, ctx).ok, false);
+});
+
+ok('performance mode: follows the match and can be switched off', async () => {
+  const calls = [];
+  const perf = require('../src/perf').createPerf({ enabled: () => true, calm: (on) => calls.push(on) });
+  await perf.set(true); await perf.set(true); await perf.set(false);
+  assert.deepStrictEqual(calls, [true, false]);
+  const off = require('../src/perf').createPerf({ enabled: () => false, calm: (on) => calls.push('x' + on) });
+  await off.set(true);
+  assert.ok(!calls.includes('xtrue'));
 });
 
 (async () => {

@@ -108,6 +108,7 @@ function row(state, ctx, p, C) {
     id: p.id, name: p.name, team: t ? t.name : null, teamId: p.teamId, rating: Math.round(U.num(p.rating)), age: p.age, nation: p.nation || '',
     bot, botName: b ? b.name : bot, style: b ? b.main : null, styleName: b && b.main ? C.styles[b.main] : null,
     extra: b ? b.extra.map((x) => C.styles[x] || x) : [], photo: p.customPhoto || null, edited: !!ensure(state).edits[p.id],
+    potential: Math.round(U.num(p.potential)), morale: Math.round(U.num(p.morale)), form: Math.round(U.num(p.form)),
   };
 }
 
@@ -161,11 +162,22 @@ function command(state, cmd, ctx) {
     else list = list.filter((p) => p.teamId === state.userTeamId);
     list = list.sort((a, b) => U.num(b.rating) - U.num(a.rating)).slice(0, 60);
     const teams = state.teams.filter((t) => t && (t.playerIds || []).length).map((t) => ({ id: t.id, name: t.name })).sort((a, b) => a.name.localeCompare(b.name));
-    return { ok: true, rows: list.map((p) => row(state, ctx, p, C)), teams, styles: C.styles, bots: C.bots, userTeamId: state.userTeamId };
+    const mine = U.teamOf(state, state.userTeamId);
+    return { ok: true, rows: list.map((p) => row(state, ctx, p, C)), teams, styles: C.styles, bots: C.bots, userTeamId: state.userTeamId, budget: mine ? U.num(mine.budget) : 0, club: mine ? mine.name : '' };
   }
   if (cmd.op === 'create') {
     const r = createPlayer(state, ctx, cmd, C);
     return r.error ? { ok: false, error: r.error } : { ok: true, id: r.p.id, name: r.p.name };
+  }
+  if (cmd.op === 'budget') {
+    // club editor: set your club's budget
+    const t = U.teamOf(state, state.userTeamId);
+    const v = Number(cmd.amount);
+    if (!t || !Number.isFinite(v) || v < 0 || v > 1e10) return { ok: false, error: es ? 'Monto inválido.' : 'Invalid amount.' };
+    const diff = Math.round(v) - U.num(t.budget);
+    t.budget = Math.round(v);
+    if (Array.isArray(state.ledger) && diff) state.ledger.push({ date: state.currentDate, kind: diff > 0 ? 'prize' : 'buy', amount: diff, note: 'Club editor' });
+    return { ok: true, budget: t.budget };
   }
   if (cmd.op === 'import') {
     // one player per line: Name, Nation, Region, Age, Rating[, Potential][, PlayStyle bot]
@@ -213,6 +225,19 @@ function command(state, cmd, ctx) {
     pin(state, ctx, p);
     p.customPhoto = saveImage(ctx, buf);
     return { ok: true, photo: p.customPhoto };
+  }
+  if (cmd.op === 'stats') {
+    // squad editor: rating, potential, morale, form and age (the Hub recalculates wages and value from them)
+    const num = (v) => (v === undefined || v === null || v === '' ? null : Number(v));
+    const rating = num(cmd.rating); const pot = num(cmd.potential); const morale = num(cmd.morale); const form = num(cmd.form); const age = num(cmd.age);
+    if ([rating, pot, morale, form, age].some((v) => v !== null && !Number.isFinite(v))) return { ok: false, error: es ? 'Valores inválidos.' : 'Invalid values.' };
+    if (rating !== null) { p.rating = U.clamp(Math.round(rating), 40, 99); p.ratingExact = p.rating; }
+    if (pot !== null || rating !== null) p.potential = U.clamp(Math.round(pot !== null ? pot : U.num(p.potential)), U.num(p.rating), 99);
+    if (morale !== null) p.morale = U.clamp(Math.round(morale), 0, 100);
+    if (form !== null) p.form = U.clamp(Math.round(form), -10, 10);
+    if (age !== null) p.age = U.clamp(Math.round(age), 15, 45);
+    if (ctx.engine && typeof ctx.engine.wageFor === 'function') { try { p.wage = ctx.engine.wageFor(p); } catch { /* keep the old wage */ } }
+    return { ok: true, name: p.name };
   }
   if (cmd.op === 'reset') {
     const e = ensure(state);
