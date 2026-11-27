@@ -252,7 +252,28 @@ function command(state, cmd, ctx) {
     if (cmd.voice !== undefined) c.voice = !!cmd.voice;
     if (cmd.rate !== undefined) c.rate = U.clamp(Number(cmd.rate) || 1, 0.7, 1.6);
     if (cmd.live !== undefined) c.live = !!cmd.live;
+    if (cmd.broadcast !== undefined) c.broadcast = !!cmd.broadcast;
     return { ok: true };
+  }
+  if (cmd.op === 'broadcastPreview') {
+    // the broadcast screens with the last game of your most recent series, to check how they look on screen
+    const es = ctx.lang === 'es';
+    if (!ctx.broadcast) return { ok: false, error: es ? 'Abrí el Hub con RL Career Extras para usar la vista previa.' : 'Start the Hub with RL Career Extras to use the preview.' };
+    const mine = (f) => f && f.played && (f.homeId === state.userTeamId || f.awayId === state.userTeamId) && (f.games || []).some((g) => g && g.homeGoals != null);
+    const fx = (state.fixtures || []).filter(mine).sort((a, b) => String(b.date).localeCompare(String(a.date)))[0];
+    if (!fx) return { ok: false, error: es ? 'Todavía no jugaste ninguna serie.' : 'You have not played a series yet.' };
+    const games = fx.games.filter((g) => g && g.homeGoals != null);
+    const last = games[games.length - 1];
+    let hw = 0; let aw = 0;
+    for (const g of games.slice(0, -1)) { if (U.num(g.homeGoals) > U.num(g.awayGoals)) hw++; else aw++; }
+    const H = U.teamOf(state, fx.homeId); const A = U.teamOf(state, fx.awayId);
+    const line = (team) => (l) => ({ name: l.name, team, score: U.num(l.points), goals: U.num(l.goals), assists: U.num(l.assists), shots: U.num(l.shots), saves: U.num(l.saves), demos: U.num(l.demos) });
+    const stats = [...(last.homeLines || []).map(line(0)), ...(last.awayLines || []).map(line(1))];
+    const data = require('./broadcast-data').buildEndScreen(state,
+      { blue: H ? H.name : 'Blue', orange: A ? A.name : 'Orange', series: [hw, aw], bestOf: Number(fx.bestOf) || 1, game: games.length, names: {} },
+      { score: [U.num(last.homeGoals), U.num(last.awayGoals)], ot: !!last.overtime, stats }, casterLang(state, ctx), Object.assign({}, fx, { games: games.slice(0, -1) }));
+    ctx.broadcast.showEnd(data, { delay: 0.3 });
+    return { ok: true, msg: es ? 'Vista previa en pantalla.' : 'Preview on screen.' };
   }
   return { ok: false, error: 'Unknown caster command.' };
 }
@@ -267,7 +288,7 @@ function snapshot(state, ctx) {
     for (const g of f.games) { if (U.num(g.homeGoals) > U.num(g.awayGoals)) hw++; else aw++; }
     return { id: f.id, date: f.date, home: H.name || '?', away: A.name || '?', hw, aw, event: ev ? ev.name : '', stage: f.stage || '', mine: f.homeId === state.userTeamId || f.awayId === state.userTeamId, watched: watched.has(f.id) };
   });
-  return { list, lang: c.lang, effLang: casterLang(state, ctx), voice: c.voice !== false, rate: Number(c.rate) || 1.1, live: c.live !== false, casters: CASTERS, unseen: list.filter((x) => x.mine && !x.watched && U.daysBetween(x.date, state.currentDate) <= 3).length };
+  return { list, lang: c.lang, effLang: casterLang(state, ctx), voice: c.voice !== false, rate: Number(c.rate) || 1.1, live: c.live !== false, broadcast: c.broadcast !== false, casters: CASTERS, unseen: list.filter((x) => x.mine && !x.watched && U.daysBetween(x.date, state.currentDate) <= 3).length };
 }
 
 module.exports = { id: ID, command, snapshot, _test: { buildScript, goalOrder, castable } };

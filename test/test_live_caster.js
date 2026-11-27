@@ -129,6 +129,36 @@ ok('pro voices: every recorded file exists and every clip the composer asks for 
   assert.ok(goal, 'goals are followed by the score');
 });
 
+ok('broadcast screens: the end of a game gives the series card and the stat sheet', () => {
+  const shown = [];
+  const live = LC.createLive({ getState: () => st, send: () => {}, onEnd: (d) => shown.push(d), lang: () => 'en', python: null, readSpec: () => spec });
+  st.xtra.caster = Object.assign(st.xtra.caster || {}, { lang: 'en', live: false, broadcast: true });
+  const stats = [...mates.map((p, i) => ({ name: p.name, team: 0, score: 300 + i, goals: 1, assists: i, shots: 2, saves: 1, demos: i })), { name: 'SteamName123', team: 0, score: 500, goals: 2, assists: 1, shots: 4, saves: 3, demos: 2 }, ...opps.map((p, i) => ({ name: p.name, team: 1, score: 100 + i, goals: 0, assists: 0, shots: 1, saves: 2, demos: 0 }))];
+  live._onEvent({ k: 'roster', players });
+  live._onEvent({ k: 'start', score: [0, 0], remaining: 300 });
+  live._onEvent({ k: 'end', score: [3, 2], mvp: 'SteamName123', stats });
+  assert.strictEqual(shown.length, 1, 'shown even with the commentary off');
+  const d = shown[0];
+  assert.strictEqual(d.teams[0].name, team.name);
+  assert.strictEqual(d.teams[1].name, oppTeam.name);
+  assert.deepStrictEqual(d.series, [2, 0], 'series 1-0 before this game, 2-0 after');
+  assert.strictEqual(d.game, 2);
+  assert.deepStrictEqual(d.seq, [0, 0], 'pips: game 1 and game 2 won by blue');
+  const mvp = d.teams[0].players.find((p) => p.mvp);
+  assert.ok(mvp && mvp.name === user.name, 'MVP is the best of the winners, shown with the career name');
+  assert.ok(d.teams[0].players.every((p) => typeof p.demos === 'number'));
+  assert.ok(/lead the series 2-0/.test(d.footer), d.footer);
+  assert.ok(d.header && !/undefined/.test(d.header), d.header);
+  // switched off in the settings: nothing
+  st.xtra.caster.broadcast = false;
+  live._onEvent({ k: 'end', score: [3, 2], stats });
+  assert.strictEqual(shown.length, 1);
+  st.xtra.caster.broadcast = true; st.xtra.caster.live = true;
+  // the screen itself renders with that data
+  const html = fs.readFileSync(path.join(__dirname, '..', 'src', 'overlay', 'endscreen.html'), 'utf8');
+  assert.ok(/window\.xtShowEnd = function/.test(html) && /window\.xtHide = function/.test(html));
+});
+
 ok('switched off (setting or mod manager) = silent', () => {
   const sent = [];
   const live = LC.createLive({ getState: () => st, send: (p) => sent.push(p), lang: () => 'es', python: null, readSpec: () => spec });

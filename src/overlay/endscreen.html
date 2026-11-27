@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>RL Career Extras - broadcast</title>
+<style>
+  :root { --blue: #2fa8e0; --orange: #f26b1d; --ink: #e9eef6; --muted: #8a96a8; --panel: rgba(14, 17, 23, .92); --line: rgba(255, 255, 255, .08); }
+  html, body { margin: 0; height: 100%; background: transparent; overflow: hidden; }
+  body { font-family: 'Bahnschrift', 'DIN Alternate', 'Segoe UI', sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .caps { text-transform: uppercase; font-style: italic; font-weight: 700; letter-spacing: .04em; }
+  #root { position: fixed; inset: 0; opacity: 0; transition: opacity .7s ease; pointer-events: none; }
+  #root.on { opacity: 1; }
+  /* dark arena backdrop with broad diagonal bands */
+  .bg { position: absolute; inset: 0; background:
+      repeating-linear-gradient(115deg, rgba(255,255,255,.025) 0 9vw, rgba(255,255,255,0) 9vw 17vw),
+      radial-gradient(120% 90% at 50% 40%, #1b212b 0%, #0d1015 70%, #07090c 100%); }
+  .topbar { position: absolute; top: 0; left: 0; right: 0; height: 4.4vh; background: #15181e; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: center; font-size: 1.6vh; color: #cfd6e2; letter-spacing: .12em; }
+  .topbar .dot { position: absolute; width: 1.6vh; height: 1.6vh; border-radius: 50%; border: .25vh solid; }
+  .topbar .dot.l { left: 1.2vw; border-color: var(--blue); } .topbar .dot.r { right: 1.2vw; border-color: var(--orange); }
+
+  section { position: absolute; inset: 4.4vh 0 0 0; display: flex; align-items: center; justify-content: center; opacity: 0; transform: translateY(2vh); transition: opacity .6s ease, transform .6s ease; }
+  section.on { opacity: 1; transform: none; }
+  section.out { opacity: 0; transform: translateY(-3vh); }
+
+  /* ---------- series card ---------- */
+  .series { display: grid; grid-template-columns: 22vw 20vw 22vw; align-items: center; gap: 3vw; margin-top: -4vh; }
+  .crest { display: flex; flex-direction: column; align-items: center; gap: 2.6vh; transition: transform .8s cubic-bezier(.2,.8,.2,1), opacity .8s; }
+  .crest .box { width: 18vh; height: 18vh; background: linear-gradient(160deg, #1d222b, #121519); border: 1px solid var(--line); box-shadow: 0 1.5vh 3vh rgba(0,0,0,.45);
+    display: flex; align-items: center; justify-content: center; }
+  .crest .box.dark { background: linear-gradient(160deg, #e9edf2, #c4cbd5); }
+  .head .lg.dark { background: #dfe4ea; }
+  .crest img { max-width: 78%; max-height: 78%; filter: drop-shadow(0 .6vh 1.2vh rgba(0,0,0,.5)); }
+  .crest .initials { font-size: 6vh; }
+  .crest .name { font-size: 2.6vh; }
+  section:not(.on) .crest.l { transform: translateX(-6vw); opacity: 0; } section:not(.on) .crest.r { transform: translateX(6vw); opacity: 0; }
+  .mid { display: flex; flex-direction: column; align-items: center; gap: 1.6vh; }
+  .mid .game { font-size: 2.2vh; color: #cdd5e0; letter-spacing: .3em; }
+  .nums { display: flex; gap: .6vh; }
+  .nums div { width: 8.6vh; height: 10vh; display: flex; align-items: center; justify-content: center; font-size: 8vh; line-height: 1; transform: scale(.6); opacity: 0;
+    transition: transform .5s cubic-bezier(.2,1.6,.4,1) .45s, opacity .3s .45s; }
+  section.on .nums div { transform: none; opacity: 1; }
+  .nums .b { background: var(--blue); } .nums .o { background: var(--orange); }
+  .mid .bo { font-size: 1.6vh; color: var(--muted); letter-spacing: .25em; }
+  .pips { display: flex; gap: .5vh; }
+  .pips i { display: block; width: 3.4vh; height: .7vh; background: #3a414c; }
+  .pips i.b { background: var(--blue); } .pips i.o { background: var(--orange); }
+  .bar { position: absolute; bottom: 21vh; width: 22vw; height: .5vh; background: #2a3038; border-radius: 1vh; }
+
+  /* ---------- stat sheet ---------- */
+  .sheet { width: 76vw; margin-top: -8vh; }
+  .sheet .ev { text-align: center; font-size: 1.3vh; color: var(--muted); letter-spacing: .2em; margin-bottom: .8vh; }
+  .head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; height: 5.6vh; }
+  .head .tn { display: flex; align-items: center; justify-content: center; font-size: 2.2vh; background: var(--panel); border: 1px solid var(--line); }
+  .head .tn.b { border-bottom: .35vh solid var(--blue); } .head .tn.o { border-bottom: .35vh solid var(--orange); }
+  .head .sc { display: flex; align-items: center; background: #0b0d11; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .head .sc > * { height: 100%; display: flex; align-items: center; justify-content: center; }
+  .head .lg { width: 5.6vh; } .head .lg img { max-width: 70%; max-height: 70%; } .head .lg .initials { font-size: 1.6vh; }
+  .head .n { width: 5vh; font-size: 4vh; } .head .ft { width: 3.6vh; font-size: 1.4vh; background: #e9eef6; color: #0b0d11; font-style: normal; }
+  .sheet .pips { justify-content: center; margin: .8vh 0 1.8vh; }
+  table { width: 100%; border-collapse: separate; border-spacing: .4vh 0; }
+  th, td { text-align: center; font-size: 1.9vh; height: 4.2vh; padding: 0 .4vw; }
+  th { font-size: 1.4vh; color: #c3cbd8; background: var(--panel); border-bottom: .3vh solid; height: 3.4vh; }
+  th.b { border-color: var(--blue); } th.o { border-color: var(--orange); } th.lbl { background: transparent; border: 0; }
+  td { background: rgba(14,17,23,.82); } td.lbl { background: transparent; color: #dfe5ee; font-size: 1.5vh; position: relative; width: 13vw; }
+  td.lbl::after { content: ''; position: absolute; left: 10%; right: 10%; bottom: .4vh; height: .18vh; background: linear-gradient(90deg, var(--blue) 50%, var(--orange) 50%); opacity: .8; }
+  td.best { color: #7fd0ff; } td.best.o { color: #ffb27a; }
+  .mvp::before { content: '★ '; color: #ffd36a; }
+  tr { opacity: 0; transform: translateX(-1vw); transition: opacity .4s, transform .4s; }
+  section.on tr { opacity: 1; transform: none; }
+  .foot { text-align: center; margin-top: 2.2vh; font-size: 1.7vh; color: #dfe5ee; letter-spacing: .14em; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="bg"></div>
+  <div class="topbar caps"><span class="dot l"></span><span id="hdr"></span><span class="dot r"></span></div>
+  <section id="series"></section>
+  <section id="stats"></section>
+</div>
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+const esc = (v) => String(v == null ? '' : v).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+let timers = [];
+const later = (ms, fn) => timers.push(setTimeout(fn, ms));
+function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+function logo(t, cls) {
+  if (t.logoUrl) return `<img src="${esc(t.logoUrl)}" alt="">`;
+  const bg = t.color || (t.side ? '#f26b1d' : '#2fa8e0');
+  return `<span class="initials caps" style="color:${esc(t.color2 || '#fff')};background:${esc(bg)};padding:.4em .5em">${esc(t.abbrev)}</span>`;
+}
+function pips(d) {
+  let h = '';
+  for (let i = 0; i < d.bestOf; i++) h += `<i class="${d.seq[i] === 0 ? 'b' : d.seq[i] === 1 ? 'o' : ''}"></i>`;
+  return `<div class="pips">${h}</div>`;
+}
+function seriesCard(d) {
+  const [b, o] = d.teams;
+  return `<div class="series">
+    <div class="crest l"><div class="box${b.dark ? ' dark' : ''}">${logo(b)}</div><div class="name caps">${esc(b.name)}</div></div>
+    <div class="mid"><div class="game caps">${esc(d.labels.game)} ${esc(d.game)}</div>
+      <div class="nums caps"><div class="b">${d.series[0]}</div><div class="o">${d.series[1]}</div></div>
+      <div class="bo caps">${esc(d.labels.bestOf)} ${esc(d.bestOf)}</div>${pips(d)}</div>
+    <div class="crest r"><div class="box${o.dark ? ' dark' : ''}">${logo(o)}</div><div class="name caps">${esc(o.name)}</div></div>
+  </div><div class="bar"></div>`;
+}
+function statSheet(d) {
+  const [b, o] = d.teams;
+  const pad = (list) => { const l = list.slice(0, 3); while (l.length < 3) l.push(null); return l; };
+  const bp = pad(b.players || []); const op = pad(o.players || []);
+  const best = (k) => Math.max(0, ...[...(b.players || []), ...(o.players || [])].map((p) => p[k] || 0));
+  const cell = (p, k, side) => p ? `<td class="caps ${p[k] > 0 && p[k] === best(k) ? 'best ' + (side ? 'o' : 'b') : ''}">${p[k]}</td>` : '<td></td>';
+  const name = (p, side) => p ? `<th class="caps ${side ? 'o' : 'b'}"><span class="${p.mvp ? 'mvp' : ''}">${esc(p.name)}</span></th>` : `<th class="${side ? 'o' : 'b'}"></th>`;
+  let rows = `<tr>${bp.map((p) => name(p, 0)).join('')}<th class="lbl"></th>${op.map((p) => name(p, 1)).join('')}</tr>`;
+  d.labels.rows.forEach(([k, label], i) => {
+    rows += `<tr style="transition-delay:${0.15 + i * 0.07}s">${bp.map((p) => cell(p, k, 0)).join('')}<td class="lbl caps">${esc(label)}</td>${op.map((p) => cell(p, k, 1)).join('')}</tr>`;
+  });
+  return `<div class="sheet">
+    <div class="ev caps">${esc(d.header)}</div>
+    <div class="head caps"><div class="tn b">${esc(b.name)}</div>
+      <div class="sc"><div class="lg${b.dark ? ' dark' : ''}">${logo(b)}</div><div class="n">${d.score[0]}</div><div class="ft">${esc(d.labels.result)}</div><div class="n">${d.score[1]}</div><div class="lg${o.dark ? ' dark' : ''}">${logo(o)}</div></div>
+      <div class="tn o">${esc(o.name)}</div></div>
+    ${pips(d)}
+    <table>${rows}</table>
+    <div class="foot caps">${esc(d.footer)}</div>
+  </div>`;
+}
+
+// Sequence: backdrop in -> series card -> stat sheet -> fade out. opts.hold = seconds the sheet stays.
+window.xtShowEnd = function (d, opts) {
+  clearTimers();
+  const o = Object.assign({ series: 5, sheet: 11 }, opts || {});
+  $('hdr').textContent = d.header || '';
+  $('series').className = ''; $('stats').className = '';
+  $('series').innerHTML = seriesCard(d);
+  $('stats').innerHTML = statSheet(d);
+  requestAnimationFrame(() => {
+    $('root').classList.add('on');
+    later(350, () => $('series').classList.add('on'));
+    later(o.series * 1000, () => { $('series').classList.add('out'); });
+    later(o.series * 1000 + 450, () => $('stats').classList.add('on'));
+    later((o.series + o.sheet) * 1000, () => window.xtHide());
+  });
+  return 'shown';
+};
+window.xtHide = function () {
+  clearTimers();
+  $('root').classList.remove('on');
+  setTimeout(() => { $('series').className = ''; $('stats').className = ''; if (window.xtDone) window.xtDone(); }, 800);
+  return 'hidden';
+};
+</script>
+</body>
+</html>

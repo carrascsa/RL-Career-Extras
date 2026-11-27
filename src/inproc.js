@@ -180,9 +180,12 @@ function startLiveCaster() {
     const { app, BrowserWindow } = require('electron');
     const python = path.join(process.resourcesPath || '', 'python', 'python.exe');
     const hubWindow = () => BrowserWindow.getAllWindows().find((w) => w && w.webContents && /renderer[\\/]index\.html/.test(w.webContents.getURL()));
+    const broadcast = require('./broadcast').createBroadcast({ log });
+    ctx.broadcast = broadcast; // for the preview button in the Caster tab
     live = require('./live-caster').createLive({
       python,
       log,
+      onEnd: (data) => broadcast.showEnd(data),
       lang: () => ctx.lang,
       getState: () => liveState,
       send: (payload) => {
@@ -192,7 +195,7 @@ function startLiveCaster() {
       },
     });
     live.start();
-    const stop = () => { if (live) live.stop(); };
+    const stop = () => { if (live) live.stop(); broadcast.destroy(); };
     app.on('before-quit', stop);
     app.on('will-quit', stop);
     process.on('exit', stop);

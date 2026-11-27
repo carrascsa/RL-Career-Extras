@@ -6,6 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const U = require('./util');
+const { buildEndScreen } = require('./broadcast-data');
 
 const T = {
   en: {
@@ -298,6 +299,7 @@ function createLive(opts) {
   let lang = 'en';
   let backoff = 2000;
   let lastGoal = null;
+  let matchCtx = null;
   let stopped = false;
   let timer = null;
 
@@ -305,13 +307,24 @@ function createLive(opts) {
     const st = getState();
     const c = st && st.xtra && st.xtra.caster;
     const on = !(st && st.xtra && st.xtra.mods && st.xtra.mods.off && st.xtra.mods.off.caster);
-    return { live: on && !(c && c.live === false), lang: c && (c.lang === 'es' || c.lang === 'en') ? c.lang : opts.lang() };
+    return { live: on && !(c && c.live === false), broadcast: on && !(c && c.broadcast === false), lang: c && (c.lang === 'es' || c.lang === 'en') ? c.lang : opts.lang() };
   };
 
   function onEvent(ev) {
     if (ev.k === 'hello' || ev.k === 'connected' || ev.k === 'disconnected') { log('live caster: ' + JSON.stringify(ev)); return; }
     if (ev.k === 'idle') { log('live caster: match left'); lastGoal = null; send({ lang, event: 'idle', lines: [] }); return; }
     const s = settings();
+    // the Hub restarts the match for every game of a series: re-read game number and series score
+    if (ev.k === 'roster') lastPlayers = ev.players || [];
+    if (ev.k === 'roster' || ev.k === 'start') {
+      let spec = null;
+      try { spec = readSpec(); } catch { spec = null; }
+      matchCtx = matchContext(getState(), spec, lastPlayers, s.lang);
+    }
+    // broadcast screens after the game (series card + stat sheet), independent of the commentary
+    if (ev.k === 'end' && s.broadcast && opts.onEnd) {
+      try { opts.onEnd(buildEndScreen(getState(), matchCtx, ev, s.lang)); } catch (e) { log('broadcast data failed: ' + (e && e.message)); }
+    }
     if (!s.live) return;
     // the same goal reported twice (a replay, a reconnect) is called once
     if (ev.k === 'start' || ev.k === 'roster') lastGoal = null;
@@ -322,12 +335,8 @@ function createLive(opts) {
     }
     if (!composer || ev.k === 'roster' || lang !== s.lang) { lang = s.lang; composer = makeComposer(lang); }
     let ctxNow = null;
-    if (ev.k === 'roster') lastPlayers = ev.players || [];
     if (ev.k === 'roster' || ev.k === 'start') {
-      // the Hub restarts the match for every game of a series: re-read game number and series score
-      let spec = null;
-      try { spec = readSpec(); } catch { spec = null; }
-      ctxNow = matchContext(getState(), spec, lastPlayers, lang);
+      ctxNow = matchCtx;
       composer.state.ctx = ctxNow;
     }
     const lines = composer.compose(ev, ctxNow);

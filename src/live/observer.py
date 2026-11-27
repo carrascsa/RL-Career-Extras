@@ -109,7 +109,8 @@ class Detector:
                 top = sorted(p.players, key=lambda pl: -pl.score_info.score)
                 self.out({"k": "end", "score": list(score), "mvp": top[0].name if top else None,
                           "stats": [{"name": pl.name, "team": int(pl.team), "goals": pl.score_info.goals, "saves": pl.score_info.saves,
-                                     "assists": pl.score_info.assists, "shots": pl.score_info.shots, "score": pl.score_info.score} for pl in p.players]})
+                                     "assists": pl.score_info.assists, "shots": pl.score_info.shots, "score": pl.score_info.score,
+                                     "demos": getattr(pl.score_info, "demolitions", 0)} for pl in p.players]})
                 self.started = False
             self.phase = phase
 
