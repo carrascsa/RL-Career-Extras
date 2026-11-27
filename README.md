@@ -56,6 +56,17 @@ INSTALL.cmd "D:\Games\RL Career Hub\RL Career Hub.exe"
 - **Player talks:** 8 topics. Each player has a hidden personality, and the replies also show up in the Hub's own chat.
 - **Sponsors:** contracts with objectives and bonuses.
 - **Wellbeing:** fatigue, streaming, burnout and vacations.
+- **Backroom staff:** hire one person per role at **Bad, Mid or Best**, each with a weekly wage:
+  - 🧠 **Mental coach:** gives back part of every morale drop and lifts morale every week.
+  - 📣 **Media trainer:** more sponsor money and faster follower growth.
+  - 📋 **Assistant coach:** a shorter training cooldown and stronger sessions; the Best one runs training for you.
+  - 🛠️ **Engineer:** cheaper facility upgrades.
+  - 🌱 **Youth development coach:** faster academy growth, better intakes, and veterans lose less rating as they age.
+
+  You can also hire or release the Hub's own scouts at any tier.
+- **Facilities do more:** each facility tier speeds up academy growth and fatigue recovery.
+- **Today's series:** simulate the next game and play the rest of the series live. If you leave a live game early, **simulate the rest** from the score and clock you left at.
+- **Regional recruitment:** top EU and NA players ask for up to twice the wage, or flatly refuse, to move to a smaller region. Players from smaller regions are keener to move up.
 
 ### 🏟️ Circuit
 - **Third-party tournaments** in tiers **S, A, B, C and D**, in **3v3, 2v2 and 1v1**. They are scheduled between official events.
@@ -79,7 +90,7 @@ INSTALL.cmd "D:\Games\RL Career Hub\RL Career Hub.exe"
   - Rivalries started on Y that carry into your next series.
   - Clubs selling their spot to new organizations, and mergers.
   - You can **found your own org** or **absorb a smaller club**.
-- **Player editor:** in a running career, change any player's **name**, **photo** (upload an image) and **PlayStyle**: Bruiser, Relentless, Tiki Taka, Anticipate, Technical or Trickster, each tied to one of the Hub's bots, which is the bot the player uses in real matches. Rating, contract, titles and stats stay the same, and **Restore original** undoes everything.
+- **Player editor:** in a running career, change any player's **name**, **photo** (upload an image) and **PlayStyle**: Bruiser, Relentless, Tiki Taka, Anticipate, Technical or Trickster, each tied to one of the Hub's bots, which is the bot the player uses in real matches. Rating, contract, titles and stats stay the same, and **Restore original** undoes everything. You can also **create players** or **import** a list of them, for example semi-pros who are missing from the game.
 - **Mod manager:** switch any part of the add-on on or off for each career.
 
 ### 🐦 Livelier Y (the in-game social network)

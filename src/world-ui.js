@@ -16,6 +16,10 @@
       ed_photo: 'Photo', ed_upload: 'Upload image', ed_style: 'PlayStyle', ed_apply: 'Apply', ed_reset: 'Restore original', ed_edited: 'edited',
       ed_styleInfo: 'Main style · bot · secondary styles. With the Hub\'s V1 bot system (everyone is Nexto) PlayStyles have no effect.',
       ed_pick: 'Pick a player to edit.', ed_none: 'No players found.', ed_renamed: 'Renamed', ed_styled: 'New PlayStyle', ed_photoDone: 'Photo updated', ed_restored: 'Restored', ed_loading: 'Loading…',
+      cr_title: 'Create a player', cr_info: 'New players join as free agents (or straight onto a team). Rating 40-99, age 15-40.', cr_nation: 'Nation', cr_region: 'Region', cr_age: 'Age', cr_rating: 'Rating', cr_pot: 'Potential',
+      cr_team: 'Team', cr_fa: 'Free agent', cr_create: 'Create', cr_done: 'Player created', im_title: 'Import players', im_go: 'Import',
+      im_info: 'One player per line: Name, Nation, Region, Age, Rating, Potential (optional), PlayStyle bot (optional). Lines starting with # are skipped. Fill in the semi-pros below and remove the #.',
+      im_done: 'Imported {n}', im_skipped: 'Skipped: {l}',
       allTime: 'All-time', current: 'Right now', teams: 'Teams',
       allTimeInfo: 'Every RLCS title counts: the real ones from Liquipedia (Season 1, 2016 → RLCS 2026, shipped with the Hub) plus what is won in this career. Legends who retired before this world starts are listed too.',
       currentInfo: 'Rating, form, this season\'s numbers and titles from the last two years.',
@@ -45,6 +49,10 @@
       ed_photo: 'Foto', ed_upload: 'Subir imagen', ed_style: 'Estilo de juego', ed_apply: 'Aplicar', ed_reset: 'Restaurar original', ed_edited: 'editado',
       ed_styleInfo: 'Estilo principal · bot · estilos secundarios. Con el sistema de bots V1 del Hub (todos son Nexto) el estilo no tiene efecto.',
       ed_pick: 'Elegí un jugador para editar.', ed_none: 'No hay jugadores.', ed_renamed: 'Nombre cambiado', ed_styled: 'Nuevo estilo', ed_photoDone: 'Foto actualizada', ed_restored: 'Restaurado', ed_loading: 'Cargando…',
+      cr_title: 'Crear un jugador', cr_info: 'Los jugadores nuevos entran como agentes libres (o directo a un equipo). Nivel 40-99, edad 15-40.', cr_nation: 'Nacionalidad', cr_region: 'Región', cr_age: 'Edad', cr_rating: 'Nivel', cr_pot: 'Potencial',
+      cr_team: 'Equipo', cr_fa: 'Agente libre', cr_create: 'Crear', cr_done: 'Jugador creado', im_title: 'Importar jugadores', im_go: 'Importar',
+      im_info: 'Un jugador por línea: Nombre, Nacionalidad, Región, Edad, Nivel, Potencial (opcional), bot del estilo (opcional). Las líneas que empiezan con # se ignoran. Completá a los semi-pros de abajo y sacales el #.',
+      im_done: 'Importados: {n}', im_skipped: 'Salteados: {l}',
       allTime: 'Histórico', current: 'Actual', teams: 'Equipos',
       allTimeInfo: 'Cuenta cada título RLCS: los reales de Liquipedia (Temporada 1, 2016 → RLCS 2026, incluidos en el Hub) más lo que se gane en esta carrera. También figuran las leyendas que ya estaban retiradas cuando empieza este mundo.',
       currentInfo: 'Media, forma, números de esta temporada y títulos de los últimos dos años.',
@@ -87,6 +95,9 @@
     ['prospects', '🌱', { en: 'World prospects', es: 'Promesas mundiales' }, { en: 'New teenage free agents every season and ranked breakouts.', es: 'Adolescentes nuevos como agentes libres cada temporada y revelaciones de ranked.' }],
     ['drama', '🔥', { en: 'Drama & orgs', es: 'Drama y organizaciones' }, { en: 'Controversies, Y beefs, mergers, slot sales and new orgs.', es: 'Polémicas, peleas en Y, fusiones, ventas de plazas y orgs nuevas.' }],
     ['caster', '📺', { en: 'Caster', es: 'Caster' }, { en: 'Replays of your series with two casters, a scoreboard and voice.', es: 'Repeticiones de tus series con dos casters, marcador y voz.' }],
+    ['staff', '👔', { en: 'Backroom staff', es: 'Cuerpo técnico' }, { en: 'Mental coach, media trainer, assistant, engineer and youth coach in three tiers; more uses for facilities.', es: 'Coach mental, de medios, asistente, ingeniero y coach de cantera en tres niveles; más usos de las instalaciones.' }],
+    ['recruit', '🌍', { en: 'Regional recruitment', es: 'Fichajes por región' }, { en: 'Top EU/NA players ask for more, or say no, to play in smaller regions.', es: 'Los top de EU/NA piden más, o dicen que no, para jugar en regiones chicas.' }],
+    ['matchsim', '🎮', { en: 'Match simulation', es: 'Simulación de partidos' }, { en: 'Simulate one game of a series, or the rest of a live game you left.', es: 'Simulá un game de la serie, o lo que falta de un game en vivo que dejaste.' }],
     ['editor', '✏️', { en: 'Player editor', es: 'Editor de jugadores' }, { en: 'Rename players, change their photo and PlayStyle.', es: 'Cambiá nombre, foto y estilo de juego de los jugadores.' }],
     ['ranking', '📊', { en: 'World top', es: 'Top mundial' }, { en: 'All-time and current player rankings.', es: 'Rankings de jugadores históricos y actuales.' }],
   ];
@@ -251,8 +262,24 @@
             ${P.edited ? `<div><button class="xt-btn warn" data-xt-local="ed:reset">↩️ ${e(t('ed_reset'))}</button></div>` : ''}
           </div></div></div>`;
     }
+    const inp = 'background:rgba(0,0,0,.35);border:1px solid var(--line);color:#e8eef7;border-radius:8px;padding:6px 8px;font:inherit';
+    const field = (id, label, attrs) => `<label style="display:flex;flex-direction:column;gap:3px;font-size:12px" class="xt-muted">${e(label)}<input id="${id}" ${attrs || ''} style="${inp}"></label>`;
+    const botOpts = `<option value="">—</option>` + Object.keys(ED.styles).map((k) => ED.bots.filter((b) => b.main === k).map((b) => `<option value="${e(b.id)}">${e(ED.styles[k])} · ${e(b.name)}</option>`).join('')).join('');
+    const teamSel = `<option value="">${e(t('cr_fa'))}</option>` + ED.teams.map((x) => `<option value="${x.id}">${e(x.name)}</option>`).join('');
+    const creator = `<div class="xt-card" style="margin-top:12px"><h3>➕ ${e(t('cr_title'))}</h3><div class="xt-muted" style="margin-bottom:8px">${e(t('cr_info'))}</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">
+        ${field('xt-cr-name', t('ed_name'), 'maxlength="24"')}${field('xt-cr-nation', t('cr_nation'))}
+        <label style="display:flex;flex-direction:column;gap:3px;font-size:12px" class="xt-muted">${e(t('cr_region'))}<select id="xt-cr-region" style="${inp}">${['EU', 'NA', 'SAM', 'MENA', 'OCE', 'APAC', 'SSA'].map((r) => `<option value="${r.toLowerCase()}">${r}</option>`).join('')}</select></label>
+        ${field('xt-cr-age', t('cr_age'), 'type="number" min="15" max="40" value="20"')}${field('xt-cr-rating', t('cr_rating'), 'type="number" min="40" max="99" value="75"')}${field('xt-cr-pot', t('cr_pot'), 'type="number" min="40" max="99" value="80"')}
+        <label style="display:flex;flex-direction:column;gap:3px;font-size:12px" class="xt-muted">${e(t('ed_style'))}<select id="xt-cr-bot" style="${inp}">${botOpts}</select></label>
+        <label style="display:flex;flex-direction:column;gap:3px;font-size:12px" class="xt-muted">${e(t('cr_team'))}<select id="xt-cr-team" style="${inp}">${teamSel}</select></label>
+      </div><div style="margin-top:8px"><button class="xt-btn on" data-xt-local="ed:create">➕ ${e(t('cr_create'))}</button></div></div>`;
+    const tpl = '# Name, Nation, Region, Age, Rating, Potential, PlayStyle bot\n# Kenz, Nation, EU, 20, 76, 82\n# MetalHub, Nation, EU, 20, 76, 82\n# Cokehun, Nation, EU, 20, 76, 82\n# Richmond, Nation, EU, 20, 76, 82\n';
+    const importer = `<div class="xt-card" style="margin-top:12px"><h3>📥 ${e(t('im_title'))}</h3><div class="xt-muted" style="margin-bottom:8px">${e(t('im_info'))}</div>
+      <textarea id="xt-im-text" rows="7" style="width:100%;box-sizing:border-box;${inp};font-family:Consolas,monospace;font-size:12px">${e(ED.importText != null ? ED.importText : tpl)}</textarea>
+      <div style="margin-top:8px"><button class="xt-btn on" data-xt-local="ed:import">📥 ${e(t('im_go'))}</button></div></div>`;
     return `<div class="xt-card" style="margin-bottom:12px"><h3>✏️ ${e(t('v_editor'))}</h3><div class="xt-muted" style="margin-bottom:8px">${e(t('ed_info'))}</div>${search}</div>
-      <div class="xt-grid" style="grid-template-columns:minmax(260px,1fr) 1.6fr;align-items:start"><div class="xt-card">${rows}</div><div>${editor}</div></div>`;
+      <div class="xt-grid" style="grid-template-columns:minmax(260px,1fr) 1.6fr;align-items:start"><div class="xt-card">${rows}</div><div>${editor}</div></div>${creator}${importer}`;
   }
   document.addEventListener('change', async (ev) => {
     const el = ev.target;
@@ -294,6 +321,22 @@
       if (v === 'ed:name') { const n = document.getElementById('xt-ed-name'); edDo('rename', { name: n ? n.value : '' }, t('ed_renamed')); return; }
       if (v === 'ed:style') { const b = document.getElementById('xt-ed-bot'); edDo('style', { bot: b ? b.value : '' }, t('ed_styled')); return; }
       if (v === 'ed:reset') { edDo('reset', {}, t('ed_restored')); return; }
+      if (v === 'ed:create') {
+        const val = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+        X.cmd('editor', 'create', { name: val('xt-cr-name'), nation: val('xt-cr-nation'), region: val('xt-cr-region'), age: val('xt-cr-age'), rating: val('xt-cr-rating'), potential: val('xt-cr-pot'), bot: val('xt-cr-bot'), teamId: val('xt-cr-team') })
+          .then((res) => { if (res && res.ok) { X.toast('➕', t('cr_done'), res.name); edList(); } });
+        return;
+      }
+      if (v === 'ed:import') {
+        const el = document.getElementById('xt-im-text');
+        ED.importText = el ? el.value : '';
+        X.cmd('editor', 'import', { text: ED.importText }).then((res) => {
+          if (!res || !res.ok) return;
+          X.toast('📥', t('im_done', { n: res.made.length }), res.skipped.length ? t('im_skipped', { l: res.skipped.join(' · ') }) : res.made.join(', '), !!res.skipped.length);
+          edList();
+        });
+        return;
+      }
       render();
     },
     beforeCmd(m, op, a) {

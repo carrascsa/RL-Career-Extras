@@ -310,9 +310,20 @@ function createLive(opts) {
     return { live: on && !(c && c.live === false), broadcast: on && !(c && c.broadcast === false), lang: c && (c.lang === 'es' || c.lang === 'en') ? c.lang : opts.lang() };
   };
 
+  // where the live game stands, for "simulate the rest" (Club Life / Caster)
+  function track(ev) {
+    try {
+      const st = getState();
+      if (!st) return;
+      const fx = st.pendingMatch != null ? (st.fixtures || []).find((f) => f && f.id === Number(st.pendingMatch)) : null;
+      const home = fx ? U.teamOf(st, fx.homeId) : null;
+      require('./matchsim-engine').liveUpdate(st, ev, { blueIsHome: !home || !matchCtx || home.name === matchCtx.blue });
+    } catch (e) { log('matchsim track: ' + (e && e.message)); }
+  }
+
   function onEvent(ev) {
     if (ev.k === 'hello' || ev.k === 'connected' || ev.k === 'disconnected') { log('live caster: ' + JSON.stringify(ev)); return; }
-    if (ev.k === 'idle') { log('live caster: match left'); lastGoal = null; send({ lang, event: 'idle', lines: [] }); return; }
+    if (ev.k === 'idle') { log('live caster: match left'); lastGoal = null; track(ev); send({ lang, event: 'idle', lines: [], unfinished: !!(ev.score && ev.remaining > 0) }); return; }
     const s = settings();
     // the Hub restarts the match for every game of a series: re-read game number and series score
     if (ev.k === 'roster') lastPlayers = ev.players || [];
@@ -321,6 +332,7 @@ function createLive(opts) {
       try { spec = readSpec(); } catch { spec = null; }
       matchCtx = matchContext(getState(), spec, lastPlayers, s.lang);
     }
+    track(ev);
     // broadcast screens after the game (series card + stat sheet), independent of the commentary
     if (ev.k === 'end' && s.broadcast && opts.onEnd) {
       try { opts.onEnd(buildEndScreen(getState(), matchCtx, ev, s.lang)); } catch (e) { log('broadcast data failed: ' + (e && e.message)); }

@@ -2,6 +2,7 @@
 // Academy (cantera) + B team + Development League.
 // Prospects live in state.xtra.academy until promoted; only then do they become real Hub players.
 const U = require('./util');
+const Perks = require('./perks');
 
 const ID = 'academy';
 const LINK = 'xtacademy';
@@ -67,7 +68,7 @@ function takenNames(state, a) {
 function genProspect(state, a, r, opts) {
   const LV = LEVELS[a.level];
   const age = (opts && opts.age) || r.int(14, 16);
-  let pot = r.int(58, 84) + LV.potBonus + (r.chance(0.08) ? r.int(5, 10) : 0) + ((opts && opts.potBonus) || 0);
+  let pot = r.int(58, 84) + LV.potBonus + (r.chance(0.08) ? r.int(5, 10) : 0) + ((opts && opts.potBonus) || 0) + Perks.perk(state, 'youth', 'potentialBonus');
   pot = U.clamp(pot, 55, 96);
   const rating = U.clamp(38 + r() * 12 + (age - 14) * 3 + (pot - 70) * 0.15, 35, pot - 4);
   return {
@@ -245,6 +246,8 @@ function weekly(state, a, day, ctx) {
     let d = (0.18 + 0.06 * a.level) * LV.growth * inten.growth * ageF * moraleF * U.clamp(room / 15, 0.1, 1.2);
     if (p.played) d += 0.12;
     if (a.unpaid) d *= 0.5;
+    // youth development coach (+10/20/35%) and the club's facilities (+4% per tier)
+    d *= 1 + Perks.perk(state, 'youth', 'academyGrowth') + 0.04 * Perks.facilityTier(state, ctx);
     d *= 0.8 + r() * 0.4;
     p.rating = Math.round(Math.min(p.pot, p.rating + Math.max(0, d)) * 100) / 100;
     p.morale = U.clamp(p.morale + inten.morale + (p.played ? 1 : 0) + (r() - 0.5) * 2, 10, 100);

@@ -243,6 +243,67 @@
     return `<div class="xt-card"><h3>🧘 ${e(t('wellbeing'))}</h3><div class="xt-muted" style="margin-bottom:6px">${e(t('wbInfo', { w: W.warn, b: W.burn }))}</div>${W.lastIncome ? `<div class="xt-muted">${e(t('lastIncome', { m: X.money(W.lastIncome) }))}</div>` : ''}${rows}${log ? `<div style="margin-top:8px">${log}</div>` : ''}</div>`;
   }
 
+  // ---------- today's series: simulate a game, or the rest of one you left ----------
+  const D2 = {
+    en: {
+      today: "Today's series", simNext: 'Simulate next game', simNextInfo: 'The game is simulated and the series goes on: play the next game live from the Hub as usual.',
+      unfinished: 'You left game {g} at {s} with {t} to play.', simRest: 'Simulate the rest', simRestInfo: 'The remaining time is simulated from that score.',
+      simDone: 'Simulated', series: 'Series', staff: 'Backroom staff', staffInfo: 'Hire one person per role. Better tiers do more and cost more (weekly wages; hiring costs two weeks).',
+      hire: 'Hire', fire: 'Release', weekly: '{m}/week', bill: 'Weekly staff bill: {m}', tier_bad: 'Bad', tier_mid: 'Mid', tier_best: 'Best',
+      r_mental: 'Mental coach', r_media: 'Media trainer', r_assistant: 'Assistant coach', r_engineer: 'Engineer', r_youth: 'Youth development coach',
+      d_mental: 'Gives back {a}% of every morale drop, +{b} morale a week.', d_media: '+{a}% sponsor money (Hub media deals and sponsors), +{b}% follower growth.',
+      d_assistant: 'Training cooldown −{a} days, sessions +{b}%.', d_assistantBest: 'Runs training for you. Sessions +{b}%, cooldown −{a} days.',
+      d_engineer: 'Facility upgrades −{a}%.', d_youth: 'Academy growth +{a}%, intake potential +{b}, veterans lose {c}% less rating at the season change.',
+      scouts: "Scouts (the Hub's)", scoutHire: 'Hire scout', facilities: 'Facilities (tier {n}): academy growth +{a}%, faster recovery from fatigue +{b}%.', autoSessions: 'Sessions run by your assistant: {n}',
+    },
+    es: {
+      today: 'Serie de hoy', simNext: 'Simular el próximo game', simNextInfo: 'Se simula el game y la serie sigue: jugá el siguiente en vivo desde el Hub como siempre.',
+      unfinished: 'Dejaste el game {g} con {s} y faltaban {t}.', simRest: 'Simular lo que falta', simRestInfo: 'Se simula el tiempo restante desde ese resultado.',
+      simDone: 'Simulado', series: 'Serie', staff: 'Cuerpo técnico', staffInfo: 'Contratá una persona por puesto. Los mejores niveles hacen más y cuestan más (sueldo semanal; contratar cuesta dos semanas).',
+      hire: 'Contratar', fire: 'Despedir', weekly: '{m}/semana', bill: 'Sueldos del cuerpo técnico: {m} por semana', tier_bad: 'Malo', tier_mid: 'Medio', tier_best: 'El mejor',
+      r_mental: 'Coach mental', r_media: 'Entrenador de medios', r_assistant: 'Asistente técnico', r_engineer: 'Ingeniero', r_youth: 'Coach de cantera',
+      d_mental: 'Devuelve el {a}% de cada caída de moral, +{b} de moral por semana.', d_media: '+{a}% de plata de sponsors (acuerdos de medios del Hub y sponsors), +{b}% de crecimiento de seguidores.',
+      d_assistant: 'Espera de entrenamiento −{a} días, sesiones +{b}%.', d_assistantBest: 'Entrena por vos. Sesiones +{b}%, espera −{a} días.',
+      d_engineer: 'Mejoras de instalaciones −{a}%.', d_youth: 'Crecimiento de la cantera +{a}%, potencial de los juveniles +{b}, los veteranos pierden {c}% menos nivel al cambiar la temporada.',
+      scouts: 'Scouts (del Hub)', scoutHire: 'Contratar scout', facilities: 'Instalaciones (nivel {n}): cantera +{a}% de crecimiento, +{b}% de recuperación del cansancio.', autoSessions: 'Sesiones que hizo tu asistente: {n}',
+    },
+  };
+  const t2 = (k, p) => X.tr(D2, k, p);
+  const args = (o) => e(JSON.stringify(o || {}));
+  const clock = (sec) => `${Math.floor(sec / 60)}:${String(Math.max(0, sec % 60)).padStart(2, '0')}`;
+  function simCard(M) {
+    if (!M || !M.today) return '';
+    const T = M.today;
+    const unf = M.unfinished ? `<div class="xt-row"><span>⏱️ ${e(t2('unfinished', { g: T.games + 1, s: M.unfinished.score.join('-'), t: clock(M.unfinished.remaining) }))}<br><span class="xt-muted">${e(t2('simRestInfo'))}</span></span><button class="xt-btn" data-xt-cmd="matchsim:rest" data-xt-args="${args({})}">${e(t2('simRest'))}</button></div>` : '';
+    return `<div class="xt-card" style="margin-top:12px"><h3><span>🎮 ${e(t2('today'))}</span><span class="xt-muted">${e(T.home)} ${T.wins[0]}-${T.wins[1]} ${e(T.away)} · Bo${T.bestOf}</span></h3>${unf}
+      <div class="xt-row"><span class="xt-muted">${e(t2('simNextInfo'))}</span><button class="xt-btn" data-xt-cmd="matchsim:nextGame" data-xt-args="${args({})}">⏭️ ${e(t2('simNext'))}</button></div></div>`;
+  }
+  function staffCard(S) {
+    if (!S) return '';
+    const fmt = (v) => Math.round(v * 100);
+    const desc = (r, i) => {
+      const P = r.perks;
+      if (r.role === 'mental') return t2('d_mental', { a: fmt(P.moraleRefund[i]), b: P.weeklyMorale[i] });
+      if (r.role === 'media') return t2('d_media', { a: fmt(P.sponsorBonus[i]), b: fmt(P.followerBoost[i]) });
+      if (r.role === 'assistant') return t2(P.autoTrain[i] ? 'd_assistantBest' : 'd_assistant', { a: P.trainingCooldown[i], b: fmt(P.trainingBoost[i]) });
+      if (r.role === 'engineer') return t2('d_engineer', { a: fmt(P.facilityDiscount[i]) });
+      return t2('d_youth', { a: fmt(P.academyGrowth[i]), b: P.potentialBonus[i], c: fmt(P.declineRefund[i]) });
+    };
+    const TI = ['bad', 'mid', 'best'];
+    const rows = S.roles.map((r) => {
+      const m = r.member;
+      const now = m ? `<b>${e(m.name)}</b> · ${e(t2('tier_' + m.tier))} · ${e(t2('weekly', { m: X.money(m.wage) }))}<br><span class="xt-muted">${e(desc(r, TI.indexOf(m.tier)))}</span>` : `<span class="xt-muted">—</span>`;
+      const hires = r.candidates.map((c, i) => `<button class="xt-btn ${m && m.tier === c.tier ? 'on' : ''}" title="${e(c.name + ' · ' + desc(r, i))}" data-xt-cmd="staff:hire" data-xt-args="${args({ role: r.role, tier: c.tier })}">${e(t2('tier_' + c.tier))} · ${e(X.money(c.wage))}</button>`).join('');
+      return `<div class="xt-row" style="align-items:flex-start;gap:8px"><span style="flex:1">${r.icon} <b>${e(t2('r_' + r.role))}</b><br>${now}</span><span class="xt-actions" style="flex-wrap:wrap;justify-content:flex-end">${hires}${m ? `<button class="xt-btn warn" data-xt-cmd="staff:fire" data-xt-args="${args({ role: r.role })}">${e(t2('fire'))}</button>` : ''}</span></div>`;
+    }).join('');
+    const scouts = S.scouts.map((x) => `<div class="xt-row"><span>🔭 ${e(x.name)} · ${e(t2('tier_' + x.tier))} · ${e(t2('weekly', { m: X.money(x.wage) }))}</span><button class="xt-btn warn" data-xt-cmd="staff:scoutRelease" data-xt-args="${args({ id: x.id })}">${e(t2('fire'))}</button></div>`).join('');
+    const scoutHire = TI.map((tier) => `<button class="xt-btn" data-xt-cmd="staff:scoutHire" data-xt-args="${args({ tier })}">${e(t2('tier_' + tier))} · ${e(X.money(S.scoutWage[tier]))}</button>`).join('');
+    return `<div class="xt-card" style="margin-top:12px"><h3><span>👔 ${e(t2('staff'))}</span><span class="xt-muted">${e(t2('bill', { m: X.money(S.bill) }))}</span></h3>
+      <div class="xt-muted" style="margin-bottom:6px">${e(t2('staffInfo'))}</div>${rows}
+      <div class="xt-muted" style="margin-top:8px">🏠 ${e(t2('facilities', { n: S.facilityTier, a: S.facilityTier * 4, b: S.facilityTier * 8 }))}${S.autoSessions ? ' · ' + e(t2('autoSessions', { n: S.autoSessions })) : ''}</div>
+      <h3 style="margin-top:12px">🔭 ${e(t2('scouts'))}</h3>${scouts}<div class="xt-actions" style="justify-content:flex-start;margin-top:6px"><span class="xt-muted">${e(t2('scoutHire'))}:</span>${scoutHire}</div></div>`;
+  }
+
   function page() {
     const s = snap();
     if (!s) return '<div class="xt"><div class="xt-card xt-muted">…</div></div>';
@@ -250,8 +311,9 @@
     return `<div class="xt">
       <div class="xt-head"><div style="font-size:40px">🎙️</div><div class="grow"><div class="xt-h1">${e(t('title'))}</div><div class="xt-h2">${e(t('sub'))}</div></div></div>
       ${s.matchday ? `<div class="xt-grid xt-two">${matchCard(s.matchday)}${pressCard(s.matchday)}</div>` : ''}
+      ${simCard(s.matchsim)}
       ${talkCard(s.talk)}
-      ${s.manager === false ? `<div class="xt-card" style="margin-top:12px">${e(t('managerOnly'))}</div>` : `${s.club ? `<div class="xt-grid xt-two" style="margin-top:12px">${dressingCard(C)}${boardCard(C)}</div>` : ''}<div class="xt-grid xt-two" style="margin-top:12px">${wellbeingCard(s.wellbeing)}${sponsorCard(s.sponsor)}</div>`}
+      ${s.manager === false ? `<div class="xt-card" style="margin-top:12px">${e(t('managerOnly'))}</div>` : `${s.club ? `<div class="xt-grid xt-two" style="margin-top:12px">${dressingCard(C)}${boardCard(C)}</div>` : ''}<div class="xt-grid xt-two" style="margin-top:12px">${wellbeingCard(s.wellbeing)}${sponsorCard(s.sponsor)}</div>${staffCard(s.staff)}`}
     </div>`;
   }
 
@@ -272,7 +334,7 @@
     color: '#5eead4',
     label: () => t('tab'),
     badge: pending,
-    visible: () => X.anyOn(['matchday', 'club', 'talk', 'sponsor', 'wellbeing']),
+    visible: () => X.anyOn(['matchday', 'club', 'talk', 'sponsor', 'wellbeing', 'staff', 'matchsim']),
     render: page,
     local(v) {
       if (v.startsWith('talk:')) {
@@ -298,6 +360,8 @@
       return args;
     },
     afterCmd(m, op, args, res) {
+      if (m === 'matchsim' && res && res.ok) X.toast('🎮', t2('simDone'), `${res.score.join('-')}${res.ot ? ' OT' : ''} · ${t2('series')} ${res.wins.join('-')}`);
+      if (m === 'staff' && op === 'hire' && res && res.ok) X.toast('👔', res.name, X.money(res.fee));
       if (m === 'matchday' && op === 'answer' && res.effects) {
         const f = res.effects;
         const s = (n) => (n > 0 ? '+' : '') + Math.round(n * 10) / 10;

@@ -74,6 +74,8 @@ class Detector:
         phase = mi.match_phase
         score = self._score(p)
         remaining = float(mi.game_time_remaining)
+        self.last_remaining = remaining
+        self.last_score = score
 
         key = tuple(sorted((pl.name, int(pl.team)) for pl in p.players))
         if key != self.roster_key and len(p.players) >= 2:
@@ -234,7 +236,7 @@ def run():
             while a["on"]:
                 time.sleep(1.0)
                 if d.started and time.monotonic() - d.wall > 4.0:
-                    emit({"k": "idle"})
+                    emit({"k": "idle", "score": list(getattr(d, "last_score", (0, 0))), "remaining": round(getattr(d, "last_remaining", 0))})
                     d.reset_match_state()
                     d.roster_key = None
         threading.Thread(target=idle_watch, daemon=True).start()
@@ -257,7 +259,7 @@ def run():
                 pass
         alive["on"] = False
         if det.started:
-            emit({"k": "idle"})
+            emit({"k": "idle", "score": list(getattr(det, "last_score", (0, 0))), "remaining": round(getattr(det, "last_remaining", 0))})
         time.sleep(2.0)
 
 

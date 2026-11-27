@@ -2,6 +2,7 @@
 // Sponsors with objectives: a brand pays an upfront fee and a bonus if you hit a target before a deadline.
 // Up to two active deals; offers arrive every few weeks and expire if you don't answer.
 const U = require('./util');
+const Perks = require('./perks');
 
 const ID = 'sponsor';
 const LINK = 'xtclublife';
@@ -89,8 +90,10 @@ function tickActive(state, ctx) {
     if (!done && !late) continue;
     S.active.splice(S.active.indexOf(d), 1);
     if (done) {
-      U.earn(state, d.bonus);
-      if (Array.isArray(state.ledger)) state.ledger.push({ date: state.currentDate, kind: 'sponsor', amount: d.bonus, note: d.brand + ' bonus' });
+      // media trainer: a bigger cut of every sponsor bonus
+      const extra = Math.round(d.bonus * Perks.perk(state, 'media', 'sponsorBonus'));
+      U.earn(state, d.bonus + extra);
+      if (Array.isArray(state.ledger)) state.ledger.push({ date: state.currentDate, kind: 'sponsor', amount: d.bonus + extra, note: d.brand + ' bonus' + (extra ? ' (+media trainer)' : '') });
     }
     S.log.unshift({ brand: d.brand, kind: d.kind, target: d.target, result: done ? 'success' : 'failed', bonus: done ? d.bonus : 0, date: state.currentDate });
     U.pushInbox(state, done ? (es(ctx) ? `${d.brand}: objetivo cumplido` : `${d.brand}: target met`) : (es(ctx) ? `${d.brand}: objetivo vencido` : `${d.brand}: target missed`),

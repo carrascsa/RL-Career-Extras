@@ -121,6 +121,35 @@ function photoUrl(ctx, hash) {
   }
 }
 
+const REGIONS = ['eu', 'na', 'sam', 'mena', 'oce', 'apac', 'ssa'];
+
+// a brand-new player through the Hub's own custom-player maker: a free agent, or straight onto a team
+function createPlayer(state, ctx, spec, C) {
+  const es = ctx.lang === 'es';
+  const eng = ctx.engine;
+  if (!eng || typeof eng.makeCustomPlayer !== 'function') return { error: es ? 'Esta versión del Hub no permite crear jugadores.' : 'This Hub version cannot create players.' };
+  const name = String(spec.name || '').replace(/\s+/g, ' ').trim();
+  if (name.length < 2 || name.length > 24) return { error: es ? 'nombre de 2 a 24 caracteres' : 'name must be 2-24 characters' };
+  if (state.players.some((x) => x && !x.retired && String(x.name).toLowerCase() === name.toLowerCase())) return { error: es ? 'ya existe' : 'already exists' };
+  const region = String(spec.region || '').toLowerCase();
+  if (!REGIONS.includes(region)) return { error: es ? 'región inválida (EU, NA, SAM, MENA, OCE, APAC, SSA)' : 'bad region (EU, NA, SAM, MENA, OCE, APAC, SSA)' };
+  const rating = U.clamp(Math.round(Number(spec.rating) || 70), 40, 99);
+  const age = U.clamp(Math.round(Number(spec.age) || 20), 15, 40);
+  const potential = U.clamp(Math.round(Number(spec.potential) || rating + 2), rating, 99);
+  const bot = spec.bot && C.pool.includes(String(spec.bot)) ? String(spec.bot) : null;
+  let teamId = spec.teamId == null || spec.teamId === '' ? -1 : Number(spec.teamId);
+  const team = teamId >= 0 ? U.teamOf(state, teamId) : null;
+  if (teamId >= 0 && !team) teamId = -1;
+  if (team && (team.playerIds || []).length >= ((eng.ROSTER_MAX && Number(eng.ROSTER_MAX)) || 7)) return { error: es ? 'ese equipo no tiene lugar' : 'that team has no roster spot' };
+  const id = state.players.reduce((m, x) => Math.max(m, U.num(x && x.id)), 0) + 1;
+  const p = eng.makeCustomPlayer({ name, rating, age, potential, nation: String(spec.nation || '').trim() || null, bot }, { id, teamId, used: new Set(state.players.map((x) => x && x.name)) });
+  p.home = region;
+  if (teamId < 0) { p.teamId = -1; p.freeAgent = true; } else { team.playerIds = (team.playerIds || []).concat(id); }
+  p.xtCreated = state.currentDate;
+  state.players.push(p);
+  return { p };
+}
+
 function command(state, cmd, ctx) {
   const es = ctx.lang === 'es';
   const C = choices(ctx);
@@ -133,6 +162,22 @@ function command(state, cmd, ctx) {
     list = list.sort((a, b) => U.num(b.rating) - U.num(a.rating)).slice(0, 60);
     const teams = state.teams.filter((t) => t && (t.playerIds || []).length).map((t) => ({ id: t.id, name: t.name })).sort((a, b) => a.name.localeCompare(b.name));
     return { ok: true, rows: list.map((p) => row(state, ctx, p, C)), teams, styles: C.styles, bots: C.bots, userTeamId: state.userTeamId };
+  }
+  if (cmd.op === 'create') {
+    const r = createPlayer(state, ctx, cmd, C);
+    return r.error ? { ok: false, error: r.error } : { ok: true, id: r.p.id, name: r.p.name };
+  }
+  if (cmd.op === 'import') {
+    // one player per line: Name, Nation, Region, Age, Rating[, Potential][, PlayStyle bot]
+    const made = []; const skipped = [];
+    for (const raw of String(cmd.text || '').split(/\r?\n/)) {
+      const line = raw.trim();
+      if (!line || line.startsWith('#')) continue;
+      const f = line.split(/[,;\t]/).map((x) => x.trim());
+      const r = createPlayer(state, ctx, { name: f[0], nation: f[1], region: f[2], age: f[3], rating: f[4], potential: f[5], bot: f[6], teamId: -1 }, C);
+      if (r.error) skipped.push(`${f[0] || '?'}: ${r.error}`); else made.push(r.p.name);
+    }
+    return { ok: true, made, skipped };
   }
   const p = state.players.find((x) => x && x.id === Number(cmd.id));
   if (!p) return { ok: false, error: es ? 'No encuentro ese jugador.' : 'Player not found.' };

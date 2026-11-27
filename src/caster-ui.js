@@ -15,7 +15,7 @@
       settings: 'Settings', lang: 'Commentary language', auto: 'Same as the Hub', voice: 'Voice', voiceOn: 'Voice on', voiceOff: 'Text only', speed: 'Speed',
       voices: 'Voices', pbpVoice: 'Play-by-play voice', colorVoice: 'Analyst voice', noVoices: 'No system voices found for this language: text only. Windows: Settings → Time & language → Speech → Add voices.', defaultVoice: 'Automatic',
       game: 'Game', bo: 'Best of {n}', live: 'LIVE', ended: 'FINAL', transcript: 'Commentary', pick: 'Pick a series on the left.',
-      liveTitle: 'LIVE from Rocket League', liveIdle: 'When you play a real match from the Hub, the casters call it live here and out loud.', liveSetting: 'Live commentary in your matches', broadcastSetting: 'Broadcast screens after each game (series + stats)', broadcastInfo: 'Shown over Rocket League: it must run in borderless or windowed mode.', preview: 'Preview', liveOn: 'On', liveOff: 'Off', volume: 'Volume', proVoice: 'Live caster voices', ambience: 'Arena crowd (chants, roars)', proOn: 'Pro (recorded)', proOff: 'Windows', proInfo: 'Pro voices are recorded clips in English, with the names of the players of your league.',
+      liveTitle: 'LIVE from Rocket League', liveIdle: 'When you play a real match from the Hub, the casters call it live here and out loud.', liveSetting: 'Live commentary in your matches', broadcastSetting: 'Broadcast screens after each game (series + stats)', broadcastInfo: 'Shown over Rocket League: it must run in borderless or windowed mode.', preview: 'Preview', liveOn: 'On', liveOff: 'Off', volume: 'Volume', leftEarly: 'You left this game before the end.', simRest: 'Simulate the rest', proVoice: 'Live caster voices', ambience: 'Arena crowd (chants, roars)', proOn: 'Pro (recorded)', proOff: 'Windows', proInfo: 'Pro voices are recorded clips in English, with the names of the players of your league.',
       info: 'Goals, scorers, saves, demos and overtime come from the real game data. The Hub does not store the minute of each goal, so the order and the clock are reconstructed to match the final score.',
     },
     es: {
@@ -25,7 +25,7 @@
       settings: 'Ajustes', lang: 'Idioma del relato', auto: 'Igual que el Hub', voice: 'Voz', voiceOn: 'Con voz', voiceOff: 'Solo texto', speed: 'Velocidad',
       voices: 'Voces', pbpVoice: 'Voz del relator', colorVoice: 'Voz del comentarista', noVoices: 'No hay voces del sistema para este idioma: solo texto. En Windows: Configuración → Hora e idioma → Voz → Agregar voces.', defaultVoice: 'Automática',
       game: 'Game', bo: 'Al mejor de {n}', live: 'EN VIVO', ended: 'FINAL', transcript: 'Relato', pick: 'Elegí una serie a la izquierda.',
-      liveTitle: 'EN VIVO desde Rocket League', liveIdle: 'Cuando juegues un partido real desde el Hub, los casters lo relatan en vivo acá y en voz alta.', liveSetting: 'Relato en vivo en tus partidos', broadcastSetting: 'Pantallas de transmisión al terminar cada game (serie + estadísticas)', broadcastInfo: 'Se muestran sobre Rocket League: tiene que estar en pantalla completa sin bordes o en ventana.', preview: 'Vista previa', liveOn: 'Prendido', liveOff: 'Apagado', volume: 'Volumen', proVoice: 'Voces del caster en vivo', ambience: 'Público del estadio (cánticos, festejos)', proOn: 'Pro (grabadas)', proOff: 'Windows', proInfo: 'Las voces pro son clips grabados en inglés, con los nombres de los jugadores de tu liga.',
+      liveTitle: 'EN VIVO desde Rocket League', liveIdle: 'Cuando juegues un partido real desde el Hub, los casters lo relatan en vivo acá y en voz alta.', liveSetting: 'Relato en vivo en tus partidos', broadcastSetting: 'Pantallas de transmisión al terminar cada game (serie + estadísticas)', broadcastInfo: 'Se muestran sobre Rocket League: tiene que estar en pantalla completa sin bordes o en ventana.', preview: 'Vista previa', liveOn: 'Prendido', liveOff: 'Apagado', volume: 'Volumen', leftEarly: 'Saliste de este game antes del final.', simRest: 'Simular lo que falta', proVoice: 'Voces del caster en vivo', ambience: 'Público del estadio (cánticos, festejos)', proOn: 'Pro (grabadas)', proOff: 'Windows', proInfo: 'Las voces pro son clips grabados en inglés, con los nombres de los jugadores de tu liga.',
       info: 'Los goles, goleadores, atajadas, demoliciones y alargues salen de los datos reales del partido. El Hub no guarda el minuto de cada gol, así que el orden y el reloj se reconstruyen para que coincidan con el resultado.',
     },
   };
@@ -210,7 +210,8 @@
     if (!recent) return `<div class="xt-card" style="margin-bottom:12px"><h3>🔴 ${e(t('liveTitle'))}</h3><div class="xt-muted">${e(t('liveIdle'))}</div></div>`;
     const rows = LIVE.lines.slice(0, 12).map((l) => `<div class="xt-row" style="align-items:flex-start"><span style="flex:1">${l.who === 'pbp' ? '🎙️' : '🎧'} ${l.pri >= 3 ? `<b>${e(l.text)}</b>` : e(l.text)}</span></div>`).join('');
     const sc = LIVE.score ? `${e(LIVE.blue)} <b style="font-size:20px">${LIVE.score[0]} - ${LIVE.score[1]}</b> ${e(LIVE.orange)}` : `${e(LIVE.blue)} vs ${e(LIVE.orange)}`;
-    return `<div class="xt-card alert" style="margin-bottom:12px"><h3><span>🔴 ${e(t('liveTitle'))}</span><span>${sc}</span></h3>${rows}</div>`;
+    const rest = LIVE.unfinished ? `<div class="xt-row"><span>⏱️ ${e(t('leftEarly'))}</span><button class="xt-btn" data-xt-cmd="matchsim:rest" data-xt-args="${args({})}">${e(t('simRest'))}</button></div>` : '';
+    return `<div class="xt-card alert" style="margin-bottom:12px"><h3><span>🔴 ${e(t('liveTitle'))}</span><span>${sc}</span></h3>${rest}${rows}</div>`;
   }
   // ---------- pro voices: clips recorded for Max and Leo (src/voice, handed over by the main process) ----------
   // Files arrive one by one as base64 (window.__xtVoiceFile); they are decoded only when needed, at a low
@@ -497,7 +498,7 @@
   window.__xtLive = function (payload) {
     if (!payload || !Array.isArray(payload.lines)) return;
     // Rocket League closed or the match was left: everything goes quiet
-    if (payload.event === 'idle') { LIVE.queue = []; LIVE.speaking = null; proStop(); if (synth) { try { synth.cancel(); } catch { /* ignore */ } } ambStop(3); return; }
+    if (payload.event === 'idle') { LIVE.unfinished = !!payload.unfinished; redraw(); LIVE.queue = []; LIVE.speaking = null; proStop(); if (synth) { try { synth.cancel(); } catch { /* ignore */ } } ambStop(3); return; }
     try { if (PRO.manifest && payload.lang === PRO.manifest.lang && proOn()) ambEvent(payload); } catch { /* the crowd is optional */ }
     // a live match takes over from a replay
     if (P.playing) { P.playing = false; clearTimers(); }
@@ -506,7 +507,7 @@
     if (payload.blue) LIVE.blue = payload.blue;
     if (payload.orange) LIVE.orange = payload.orange;
     if (payload.score) LIVE.score = payload.score;
-    if (payload.event === 'start') LIVE.score = [0, 0];
+    if (payload.event === 'start') { LIVE.score = [0, 0]; LIVE.unfinished = false; }
     for (const ln of payload.lines) {
       const l = Object.assign({ at: now, lang: payload.lang }, ln);
       LIVE.lines.unshift(l);
@@ -538,6 +539,7 @@
     },
     beforeCmd(m, op, a) { if (m === 'caster' && op === 'script') { P.playing = false; clearTimers(); } return a; },
     afterCmd(m, op, a, res) {
+      if (m === 'matchsim' && op === 'rest' && res && res.ok) { LIVE.unfinished = false; X.toast('⏱️', t('simRest'), `${res.from.join('-')} → ${res.score.join('-')}${res.ot ? ' OT' : ''}`); }
       if (m === 'caster' && op === 'script' && res && res.script) { P.script = res.script; P.i = -1; play(); }
     },
   });

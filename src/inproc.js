@@ -78,7 +78,7 @@ function wrapEngine(engine) {
       return origBet.call(this, state, kind, ...rest);
     };
   }
-  core.wrapEngine(engine, { log });
+  core.wrapEngine(engine, { log, lang: () => ctx.lang });
   return true;
 }
 

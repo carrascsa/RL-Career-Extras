@@ -2,6 +2,7 @@
 // Player wellbeing: a fatigue meter fed by official series, circuit events and streaming.
 // Streaming brings money and followers; too much load leads to burnout (morale drops, even time off).
 const U = require('./util');
+const Perks = require('./perks');
 
 const ID = 'wellbeing';
 const LINK = 'xtclublife';
@@ -55,7 +56,8 @@ function dayStep(state, day, ctx) {
   for (const p of roster) {
     const r = rec(W, p.id);
     const S = STREAM[r.stream] || STREAM.off;
-    let f = r.fatigue - REST + S.fatigue;
+    // better facilities mean better recovery: +8% rest per facility tier
+    let f = r.fatigue - REST * (1 + 0.08 * Perks.facilityTier(state, ctx)) + S.fatigue;
     if (played.has(p.id)) f += PER_SERIES;
     if (circ.has(p.id)) f += PER_CIRCUIT;
     if (p.absence) f -= REST; // time off heals
