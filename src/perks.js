@@ -30,8 +30,7 @@ const TIERS = ['bad', 'mid', 'best'];
 function hired(state, role) {
   const s = state && state.xtra && state.xtra.staff;
   if (!s || !Array.isArray(s.members)) return null;
-  const off = state.xtra.mods && state.xtra.mods.off;
-  if (off && off.staff) return null;
+  if (!require('./util').modOn(state, 'staff')) return null;
   return s.members.find((m) => m && m.role === role) || null;
 }
 

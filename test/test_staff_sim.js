@@ -217,10 +217,11 @@ ok('my career: one line per club, with the reason you left and your record', () 
   const M = () => core.snapshot(s, ctx).mycareer;
   assert.strictEqual(M().stints.length, 1);
   assert.strictEqual(M().stints[0].teamId, s.userTeamId);
+  const w0 = M().stints[0].w; const f0 = M().stints[0].finals; const t0 = M().stints[0].titles.length;
   const fx = s.fixtures.find((f) => !f.played && (f.homeId === s.userTeamId || f.awayId === s.userTeamId));
   fx.played = true; fx.stage = 'final'; const home = fx.homeId === s.userTeamId; fx.homeWins = home ? 3 : 0; fx.awayWins = home ? 0 : 3;
   core.tick(s, ctx); core.tick(s, ctx);
-  assert.ok(M().stints[0].w === 1 && M().stints[0].finals === 1 && M().stints[0].titles.length === 1, JSON.stringify(M().stints[0]));
+  assert.ok(M().stints[0].w === w0 + 1 && M().stints[0].finals === f0 + 1 && M().stints[0].titles.length === t0 + 1, JSON.stringify(M().stints[0]));
   s.sacked = true; core.tick(s, ctx);
   assert.strictEqual(M().stints[0].reason, 'sacked');
   const other = s.teams.find((t) => t.id !== s.userTeamId);

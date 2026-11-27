@@ -30,7 +30,7 @@ function tick(st) {
 
 function readHubLanguage() {
   try {
-    const f = path.join(process.env.APPDATA || '', 'rl-career-hub', 'language.json');
+    const f = path.join(U.userData(), 'language.json');
     const j = JSON.parse(fs.readFileSync(f, 'utf8'));
     return String(j.language || 'en').startsWith('es') ? 'es' : 'en';
   } catch { return 'en'; }

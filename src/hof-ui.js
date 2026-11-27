@@ -145,6 +145,10 @@
   function trophyIcon(kind) { return kind === 'worlds' ? '👑' : kind === 'major' ? '🌍' : kind === 'lcq' ? '🎟️' : '🏆'; }
 
   async function sendCmd(cmd) {
+    const X = window.__xt;
+    if (X && X.viaAddonManager && X.viaAddonManager()) {
+      try { const res = await X.callLib('hof', cmd); render(); return res; } catch (err) { console.warn('[Hall of Fame]', err); return null; }
+    }
     if (!window.hub || typeof window.hub.placeBet !== 'function') return null;
     try {
       const res = await window.hub.placeBet({ kind: 'hof:' + JSON.stringify(cmd), ref: 0, teamId: 0, stake: 0 });

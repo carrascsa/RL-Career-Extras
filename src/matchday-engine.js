@@ -348,8 +348,7 @@ function wrapEngine(engine, api) {
   const wrapped = function xtBotDifficulty(state, fx, ...rest) {
     const tier = orig.call(this, state, fx, ...rest);
     try {
-      const off = state && state.xtra && state.xtra.mods && state.xtra.mods.off;
-      if (off && off.matchday) return tier;
+      if (!U.modOn(state, 'matchday')) return tier;
       const m = state && state.xtra && state.xtra.matchday;
       const plan = m && fx && m.plans[fxKey(fx)];
       if (plan && plan.plan && plan.correct) {

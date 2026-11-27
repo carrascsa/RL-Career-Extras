@@ -26,6 +26,9 @@ node test\test_editor.js || set FAIL=1
 echo.
 echo === Staff, regional recruitment, match simulation, player creator ===
 node test\test_staff_sim.js || set FAIL=1
+echo.
+echo === RLC Hub Addon Manager addons (simulated manager) ===
+node test\test_addon_manager.js || set FAIL=1
 for %%S in ("%APPDATA%\rl-career-hub\saves\*.json") do (
   echo.
   echo === Season simulation: %%~nxS ===

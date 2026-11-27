@@ -290,7 +290,7 @@ function createLive(opts) {
   const send = opts.send || (() => {});
   const python = opts.python;
   const script = path.join(__dirname, 'live', 'observer.py');
-  const specFile = path.join(process.env.APPDATA || '', 'rl-career-hub', 'rlbot_match.json');
+  const specFile = path.join(U.userData(), 'rlbot_match.json');
   const readSpec = opts.readSpec || (() => JSON.parse(fs.readFileSync(specFile, 'utf8')));
   let child = null;
   let buf = '';
@@ -306,8 +306,9 @@ function createLive(opts) {
   const settings = () => {
     const st = getState();
     const c = st && st.xtra && st.xtra.caster;
-    const on = !(st && st.xtra && st.xtra.mods && st.xtra.mods.off && st.xtra.mods.off.caster);
-    return { live: on && !(c && c.live === false), broadcast: on && !(c && c.broadcast === false), lang: c && (c.lang === 'es' || c.lang === 'en') ? c.lang : opts.lang() };
+    // the live caster is part of the Caster: both have to be on
+    const on = !!st && U.modOn(st, 'caster') && U.modOn(st, 'live');
+    return { live: on && !(c && c.live === false), broadcast: !!st && U.modOn(st, 'broadcast') && !(c && c.broadcast === false), lang: c && (c.lang === 'es' || c.lang === 'en') ? c.lang : opts.lang() };
   };
 
   // where the live game stands, for "simulate the rest" (Club Life / Caster)

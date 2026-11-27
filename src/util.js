@@ -182,4 +182,20 @@ function isManager(engine, state) {
   try { return !(engine && typeof engine.isPlayerCareer === 'function' && engine.isPlayerCareer(state)); } catch { return true; }
 }
 
-module.exports = { hashStr, rng, dayRng, careerKey, daysBetween, addDays, weekday, clamp, num, isCareer, teamOf, playerOf, userTeam, rosterPlayers, xstate, fmtMoney, spend, earn, pushInbox, pushNews, chatThread, chatPush, moraleDelta, isManager, handleOf, yPost };
+// ---------- where things are, and what is switched on ----------
+// The Hub's data folder (%APPDATA%\rl-career-hub for the normal game; RLC Hub Addon Manager's copy has its own).
+let USER_DATA = null;
+function setUserData(dir) { USER_DATA = dir || null; }
+function userData() { return USER_DATA || require('path').join(process.env.APPDATA || '', 'rl-career-hub'); }
+// An outside switchboard (RLC Hub Addon Manager: the addons picked for this save) on top of our own mod manager.
+let GATE = null;
+function setGate(fn) { GATE = typeof fn === 'function' ? fn : null; }
+function gated() { return !!GATE; }
+function modOn(state, id) {
+  const off = state && state.xtra && state.xtra.mods && state.xtra.mods.off;
+  if (off && off[id]) return false;
+  if (GATE) { try { return GATE(state, id) !== false; } catch { return true; } }
+  return true;
+}
+
+module.exports = { userData, setUserData, setGate, gated, modOn, hashStr, rng, dayRng, careerKey, daysBetween, addDays, weekday, clamp, num, isCareer, teamOf, playerOf, userTeam, rosterPlayers, xstate, fmtMoney, spend, earn, pushInbox, pushNews, chatThread, chatPush, moraleDelta, isManager, handleOf, yPost };

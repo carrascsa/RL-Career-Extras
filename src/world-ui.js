@@ -45,7 +45,7 @@
       merge: 'Merge a smaller club into yours', mergeInfo: 'Once per season. You pay the fee, sign their best player and half their fanbase; their slot goes to a new org.', star: 'Best player', fee: 'Fee', doMerge: 'Merge',
       mergeDone: 'Already merged this season.', mergeNone: 'No smaller club in your region.', confirmMerge: 'Merge {t} into your club for {m}?',
       modsInfo: 'Switch any part of Career Extras on or off for this career. A module that is off stops running and hides its screens; switching it back on picks up from today (nothing is replayed). Your data is kept.',
-      on: 'On', off: 'Off', allOn: 'All on', allOff: 'All off', always: 'Always on',
+      managedInfo: 'With RLC Hub Addon Manager each feature is its own addon: pick them when you create the career or in the Setup tab.', on: 'On', off: 'Off', allOn: 'All on', allOff: 'All off', always: 'Always on',
       foundDone: '{n} is born', mergedDone: '{s} joins you', decided: 'Done',
     },
     es: {
@@ -84,7 +84,7 @@
       found: 'Fundar una organización nueva', foundInfo: 'Compra la plaza del club IA más débil de esa región y la renombra (nombre, sigla, colores y logo).', name: 'Nombre', tag: 'Sigla', create: 'Crear',
       merge: 'Fusionar un club más chico con el tuyo', mergeInfo: 'Una vez por temporada. Pagás la cuota, te quedás con su mejor jugador y la mitad de sus seguidores; su plaza pasa a una organización nueva.', star: 'Mejor jugador', fee: 'Cuota', doMerge: 'Fusionar',
       mergeDone: 'Ya hiciste una fusión esta temporada.', mergeNone: 'No hay clubes más chicos en tu región.', confirmMerge: '¿Fusionar {t} con tu club por {m}?',
-      modsInfo: 'Prendé o apagá cualquier parte de Career Extras en esta carrera. Un módulo apagado deja de funcionar y esconde sus pantallas; al prenderlo sigue desde hoy (no se repiten días). Tus datos se guardan.',
+      managedInfo: 'Con RLC Hub Addon Manager, cada función es un addon: se eligen al crear la carrera o en la pestaña Setup.', modsInfo: 'Prendé o apagá cualquier parte de Career Extras en esta carrera. Un módulo apagado deja de funcionar y esconde sus pantallas; al prenderlo sigue desde hoy (no se repiten días). Tus datos se guardan.',
       on: 'Prendido', off: 'Apagado', allOn: 'Prender todo', allOff: 'Apagar todo', always: 'Siempre activo',
       foundDone: 'Nace {n}', mergedDone: '{s} se suma a tu club', decided: 'Listo',
     },
@@ -197,11 +197,13 @@
     const on = new Map((s.mods || []).map((m) => [m.id, m.on]));
     const lg = L();
     const rows = MODS.map(([id, icon, name, desc]) => {
-      const fixed = id === 'hof';
+      const fixed = id === 'hof' && !s.managed;
       const isOn = fixed || on.get(id) !== false;
-      const btn = fixed ? `<span class="xt-pill acc">${e(t('always'))}</span>` : `<button class="xt-btn ${isOn ? 'on' : ''}" data-xt-cmd="mods:toggle" data-xt-args="${args({ id, value: !isOn })}">${e(isOn ? t('on') : t('off'))}</button>`;
+      // RLC Hub Addon Manager: features are picked there (Setup tab), so here they are only shown
+      const btn = s.managed ? `<span class="xt-pill ${isOn ? 'acc' : ''}">${e(isOn ? t('on') : t('off'))}</span>` : fixed ? `<span class="xt-pill acc">${e(t('always'))}</span>` : `<button class="xt-btn ${isOn ? 'on' : ''}" data-xt-cmd="mods:toggle" data-xt-args="${args({ id, value: !isOn })}">${e(isOn ? t('on') : t('off'))}</button>`;
       return `<div class="xt-row" style="padding:9px 0"><span><span style="font-size:18px;margin-right:8px">${icon}</span><b>${e(name[lg] || name.en)}</b><br><span class="xt-muted" style="margin-left:30px">${e(desc[lg] || desc.en)}</span></span>${btn}</div>`;
     }).join('');
+    if (s.managed) return `<div class="xt-card"><h3><span>🧩 ${e(t('v_mods'))}</span></h3><div class="xt-muted" style="margin-bottom:8px">${e(t('managedInfo'))}</div>${rows}</div>`;
     return `<div class="xt-card"><h3><span>🧩 ${e(t('v_mods'))}</span><span class="xt-actions"><button class="xt-btn" data-xt-cmd="mods:all" data-xt-args="${args({ value: true })}">${e(t('allOn'))}</button><button class="xt-btn warn" data-xt-cmd="mods:all" data-xt-args="${args({ value: false })}">${e(t('allOff'))}</button></span></h3>
       <div class="xt-muted" style="margin-bottom:8px">${e(t('modsInfo'))}</div>${rows}</div>`;
   }

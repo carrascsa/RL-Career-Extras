@@ -66,11 +66,29 @@
 
   let busy = false;
   let freshView = false; // a sub-view switch starts at the top
+  // RLC Hub Addon Manager: commands go through its action channel to the rlce-lib addon
+  const viaAddonManager = () => typeof window.hubPlus === 'object' && window.hubPlus && typeof window.hubPlus.call === 'function';
+  async function callLib(action, payload) {
+    const r = await window.hubPlus.call('rlce-lib', action, payload);
+    if (r && r.snapshot) S = r.snapshot;
+    if (!r || !r.ok) return { ok: false, error: (r && r.error) || 'RLC Hub Addon Manager refused the action.' };
+    const out = Object.assign({}, r.result || {});
+    delete out.save;
+    if (r.snapshot) out.career = r.snapshot.career;
+    return out;
+  }
   async function cmd(m, op, args) {
-    if (busy || !window.hub || typeof window.hub.placeBet !== 'function') return null;
+    if (busy) return null;
+    if (!viaAddonManager() && (!window.hub || typeof window.hub.placeBet !== 'function')) return null;
     busy = true;
     try {
       const payload = Object.assign({ m, op, lang: lang() }, args || {});
+      if (viaAddonManager()) {
+        const res = await callLib('cmd', payload);
+        if (res && res.ok === false) toast('⚠️', lang() === 'es' ? 'No se pudo' : 'Could not do that', res.error || '', true);
+        render();
+        return res;
+      }
       const res = await window.hub.placeBet({ kind: 'xt:' + JSON.stringify(payload), ref: 0, teamId: 0, stake: 0 });
       if (res && res.ok === false) toast('⚠️', lang() === 'es' ? 'No se pudo' : 'Could not do that', res.error || '', true);
       if (res && res.career !== undefined) { S = res; render(); }
@@ -84,7 +102,7 @@
   }
 
   const X = window.__xt = {
-    lang, e, money, tr, toast, cmd, tabs, pref, setPref, applyPrefs, THEMES,
+    lang, e, money, tr, toast, cmd, tabs, pref, setPref, applyPrefs, THEMES, viaAddonManager, callLib,
     snap: () => (typeof S !== 'undefined' && S && S.xtra) || null,
     // mod manager: is this module switched on in the current career?
     on(id) { const s = X.snap(); const m = s && Array.isArray(s.mods) ? s.mods.find((x) => x.id === id) : null; return !m || m.on !== false; },

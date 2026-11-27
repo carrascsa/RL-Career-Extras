@@ -29,7 +29,7 @@ function modsOf(state) {
   if (!x.mods.off || typeof x.mods.off !== 'object') x.mods.off = {};
   return x.mods;
 }
-function isOn(state, m) { return !modsOf(state).off[m.id]; }
+function isOn(state, m) { modsOf(state); return U.modOn(state, m.id); }
 function active(state) { return MODULES.filter((m) => isOn(state, m)); }
 
 function safe(ctx, label, fn) {
@@ -38,7 +38,7 @@ function safe(ctx, label, fn) {
 
 function tick(state, ctx) {
   if (!U.isCareer(state)) return;
-  safe(ctx, 'hof', () => { const f = hof.update(state); if (f.length) ctx.log('hof unlocked: ' + f.join(', ')); });
+  if (U.modOn(state, 'hof')) safe(ctx, 'hof', () => { const f = hof.update(state); if (f.length) ctx.log('hof unlocked: ' + f.join(', ')); });
   ctx.manager = U.isManager(ctx.engine, state);
   const x = U.xstate(state);
   if (x.careerKey !== U.careerKey(state) || !x.lastDay) {
@@ -77,7 +77,7 @@ function tick(state, ctx) {
 
 function snapshot(state, ctx) {
   if (!U.isCareer(state)) return null;
-  const out = { manager: U.isManager(ctx.engine, state), mods: MODULES.map((m) => ({ id: m.id, on: isOn(state, m) })) };
+  const out = { manager: U.isManager(ctx.engine, state), managed: U.gated(), mods: MODULES.map((m) => ({ id: m.id, on: isOn(state, m) })) };
   for (const m of MODULES) if (m.snapshot) out[m.id] = isOn(state, m) ? safe(ctx, m.id + '.snapshot', () => m.snapshot(state, ctx)) || null : null;
   return out;
 }

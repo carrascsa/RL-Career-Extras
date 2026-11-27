@@ -124,6 +124,22 @@ INSTALL.cmd "D:\Games\RL Career Hub\RL Career Hub.exe"
   - **Arena crowd:** a crowd bed, chants that come and go, and reactions that build up on goals and saves.
   - It goes quiet when you leave the match.
 
+## RLC Hub Addon Manager version
+
+RL Career Extras also comes as **separate addons for [RLC Hub Addon Manager](https://github.com/Dizuyte/RLC-Hub-Addon-Manager)** by Milan. Each feature (Hall of Fame, Academy, Live caster, Player editor and so on) is its own addon. All of them use a hidden library addon, `rlce-lib`.
+
+1. Install RLC Hub Addon Manager and start it once.
+2. Copy the folders inside the `addons` folder of `RLCE-Addons-<version>-all.zip` into `Documents\RL Career Hub+\addons`.
+3. Restart RL Career Hub+ and pick the addons above the Start button of a new career. You can also change them in the Setup tab.
+
+How it differs from the standalone version:
+
+- Each save only runs the features it picked. The add-on's own mod manager becomes a read-only list.
+- The data is stored where the Addon Manager expects it, in `state.hubPlusData["rlce-lib"]`.
+- Saves imported from the normal game that used RL Career Extras keep their data.
+
+To build the addons, run `node release/build-addons.js 0.2.0`.
+
 ## Known limitations
 
 - **RL Career Hub version.** Only **0.2.0-beta.33** is supported. If the Hub updates, the add-on refuses to load so that it cannot damage your career. To try it anyway, run this from the install folder:

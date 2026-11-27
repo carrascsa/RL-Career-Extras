@@ -18,7 +18,7 @@ const MAX_PHOTO = 4 * 1024 * 1024;
 // RL Career Hub's PlayStyle names (data/player-bots.json)
 const STYLE_NAMES = { bruiser: 'Bruiser', relentless: 'Relentless', tiki_taka: 'Tiki Taka', anticipate: 'Anticipate', technical: 'Technical', trickster: 'Trickster' };
 
-function artDir(ctx) { return ctx.customArtDir || path.join(process.env.APPDATA || '', 'rl-career-hub', 'custom-art'); }
+function artDir(ctx) { return ctx.customArtDir || path.join(U.userData(), 'custom-art'); }
 
 // RL Career Hub's own bot chooser (setup/player-bots.js), loaded by the add-on in the Hub process
 function bots(ctx) {

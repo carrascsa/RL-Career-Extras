@@ -13,7 +13,7 @@ function logoDataUrl(ref) {
   const files = [];
   const m = /^custom:([a-f0-9]{6,})$/i.exec(String(ref));
   if (m) {
-    const dir = path.join(process.env.APPDATA || '', 'rl-career-hub', 'custom-art');
+    const dir = path.join(require('./util').userData(), 'custom-art');
     for (const ext of ['.png', '.webp', '.jpg', '.jpeg', '.svg', '.gif']) files.push(path.join(dir, m[1] + ext));
   } else {
     const rel = String(ref).replace(/^[\\/]+/, '');

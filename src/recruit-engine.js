@@ -26,7 +26,7 @@ function stance(state, p, toRegion, homeOf) {
   return { mult: 1, refuse: false, home, to };
 }
 
-function on(state) { const off = state && state.xtra && state.xtra.mods && state.xtra.mods.off; return !(off && off[ID]); }
+function on(state) { return !!state && U.modOn(state, ID); }
 function regionOfUser(state) { const t = U.teamOf(state, state.userTeamId); return t && t.region; }
 
 function wrapEngine(engine, api) {

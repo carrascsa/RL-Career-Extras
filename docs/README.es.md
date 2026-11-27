@@ -123,6 +123,15 @@ Los avisos importantes llegan a la **bandeja de entrada** del Hub (mensajes tipo
 
 Probado con **RL Career Hub 0.2.0-beta.33**. Es independiente: no necesita ni carga otros addons. Solo en carreras de manager: en modo jugador, la cantera, el vestuario y el inversor se apagan.
 
+## Versión para RLC Hub Addon Manager
+
+RL Career Extras también viene como **addons separados para RLC Hub Addon Manager** (de Milan): cada función es un addon (Salón de la Fama, Cantera, Caster en vivo, Editor, etc.) y todos usan una biblioteca oculta, `rlce-lib`.
+1. Instalá RLC Hub Addon Manager y abrilo una vez.
+2. Copiá las carpetas de la carpeta `addons` de `RLCE-Addons-<versión>-all.zip` a `Documents\RL Career Hub+\addons`.
+3. Reiniciá RL Career Hub+ y elegí los addons arriba del botón Start de una carrera nueva (o en la pestaña Setup).
+
+Cada partida corre solo las funciones que eligió; el gestor de mods propio pasa a ser una lista de solo lectura. Los datos se guardan donde los espera el Addon Manager (`state.hubPlusData["rlce-lib"]`), y las partidas del juego normal que ya usaban RL Career Extras conservan sus datos. Para armar los addons: `node release/build-addons.js 0.2.0`.
+
 ## Uso
 
 1. Cerrá RL Career Hub.

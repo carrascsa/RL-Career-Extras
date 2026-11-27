@@ -228,6 +228,23 @@
     return Object.keys(PRO.manifest.clips).length + ' clip kinds';
   };
   window.__xtVoiceFile = function (name, b64) { PRO.raw[name] = b64; return name; };
+  // RLC Hub Addon Manager: the window asks the rlce-lib addon for the clips (they live in the Live caster addon)
+  let voicePull = null;
+  async function pullVoices() {
+    if (voicePull || !X.viaAddonManager || !X.viaAddonManager()) return;
+    if (typeof S === 'undefined' || !S || !S.career) return;
+    voicePull = (async () => {
+      const m = await X.callLib('voiceManifest', {});
+      if (!m || !m.manifest) { voicePull = null; return; }
+      window.__xtVoice({ manifest: m.manifest });
+      const files = [...Object.values(m.manifest.amb || {}).flat(), ...m.manifest.files];
+      for (const f of files) {
+        const r = await X.callLib('voiceFile', { file: f });
+        if (r && r.data) window.__xtVoiceFile(f, r.data);
+      }
+    })().catch(() => { voicePull = null; });
+  }
+  setInterval(pullVoices, 4000);
   function proCtx() {
     if (!PRO.ctx) {
       const AC = window.AudioContext || window.webkitAudioContext;
