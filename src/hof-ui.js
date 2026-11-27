@@ -294,7 +294,7 @@
     const h = snap();
     if (!h) return html;
     const badge = h.unseen && h.unseen.length ? `<span class="hof-tabbadge">${h.unseen.length}</span>` : '';
-    const btn = `<button class="xt-tb ${tab === TAB ? 'active' : ''}" data-action="tab" data-tab="${TAB}" style="color:#f6d47a">🏛️ ${e(t('tab'))}${badge}</button>`;
+    const btn = `<button class="xt-tb ${tab === TAB ? 'active' : ''}" data-action="tab" data-tab="${TAB}">${e(t('tab'))}${badge}</button>`;
     const setup = /<button[^>]*data-tab="setup"[^>]*>[\s\S]*?<\/button>/;
     if (setup.test(html)) return html.replace(setup, (m) => btn + m);
     const all = html.match(/<button[^>]*data-tab="[^"]+"[^>]*>[\s\S]*?<\/button>/g);

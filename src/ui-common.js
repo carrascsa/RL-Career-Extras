@@ -117,7 +117,6 @@
   const CSS = `
   .content > .xt,.content > .hof{height:100%;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-right:8px}
   /* our tab buttons are a bit narrower so the Hub's own tabs still fit */
-  .xt-tb{padding-left:9px!important;padding-right:9px!important;letter-spacing:.03em!important}
   @media (max-width:1500px){.xt-tb{padding-left:7px!important;padding-right:7px!important;font-size:.92em!important}}
   .xt{--a1:#5eead4;--a2:#0d9488;--card:rgba(14,20,32,.88);--line:rgba(94,234,212,.18);color:#e8eef7;padding:6px 2px 30px}
   .xt.acad{--a1:#86efac;--a2:#16a34a;--line:rgba(134,239,172,.2)}
@@ -186,7 +185,7 @@
     if (!X.snap() || !tabs.length) return html;
     const btns = tabs.filter((t) => !t.visible || t.visible()).map((t) => {
       const n = t.badge ? t.badge() : 0;
-      return `<button class="xt-tb ${tab === t.id ? 'active' : ''}" title="${e(t.label())}" data-action="tab" data-tab="${t.id}" style="color:${t.color || '#5eead4'}">${t.icon} ${e(t.label())}${n ? `<span class="xt-tabbadge">${n}</span>` : ''}</button>`;
+      return `<button class="xt-tb ${tab === t.id ? 'active' : ''}" title="${e(t.label())}" data-action="tab" data-tab="${t.id}">${e(t.label())}${n ? `<span class="xt-tabbadge">${n}</span>` : ''}</button>`;
     }).join('');
     const setup = /<button[^>]*data-tab="setup"[^>]*>[\s\S]*?<\/button>/;
     if (setup.test(html)) return html.replace(setup, (m) => btns + m);

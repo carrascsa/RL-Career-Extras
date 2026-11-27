@@ -76,7 +76,25 @@ fs.rmSync(stage, { recursive: true, force: true });
 copyDir(OUT, path.join(stage, 'addons'));
 write(path.join(stage, 'README.txt'), readme(`RL Career Extras ${VERSION} - addons for RLC Hub Addon Manager`,
   'Every RL Career Extras feature as its own addon, plus the library they share (rlce-lib).\n\n' + FEATURES.map((f) => `- ${f.name}: ${f.desc}`).join('\n') + '\n\n'
-  + 'INSTALL\n1. Install RLC Hub Addon Manager (by Milan) and start it once.\n2. Copy every folder of this zip\'s "addons" folder into Documents\\RL Career Hub+\\addons.\n3. Restart RL Career Hub+ and pick the addons above the Start button of a new career (or in the Setup tab).\n\nAll RL Career Extras addons are by carrascsa, MIT license. ' + URL));
+  + 'INSTALL\n1. Install RLC Hub Addon Manager (by Milan) and start it once.\n2. Double-click INSTALL.cmd (or copy every folder INSIDE this zip\'s "addons" folder into Documents\\RL Career Hub+\\addons - not the "addons" folder itself).\n3. Restart RL Career Hub+ and pick the addons above the Start button of a new career (or in the Setup tab).\n\nAll RL Career Extras addons are by carrascsa, MIT license. ' + URL));
+// one double-click install: copies every addon folder where RLC Hub Addon Manager looks for them
+write(path.join(stage, 'INSTALL.cmd'), [
+  '@echo off',
+  'rem RL Career Extras addons - copies the addon folders into RLC Hub Addon Manager.',
+  'setlocal',
+  'set "DEST=%USERPROFILE%\\Documents\\RL Career Hub+\\addons"',
+  'if not exist "%DEST%" (',
+  '  echo RLC Hub Addon Manager was not found ^(no "%DEST%"^).',
+  '  echo Install it first, start it once, then run this again.',
+  '  pause',
+  '  exit /b 1',
+  ')',
+  'robocopy "%~dp0addons" "%DEST%" /E /NFL /NDL /NJH /NJS /NP >nul',
+  'if errorlevel 8 (echo Copy failed. & pause & exit /b 1)',
+  'echo Done! Restart RL Career Hub+ and pick the RL Career Extras addons when you create a career.',
+  'pause',
+  '',
+].join('\r\n'));
 execFileSync('powershell', ['-NoProfile', '-Command', `Compress-Archive -Path '${path.join(stage, '*')}' -DestinationPath '${zip}' -CompressionLevel Optimal`], { stdio: 'inherit' });
 fs.rmSync(stage, { recursive: true, force: true });
 const mb = (fs.statSync(zip).size / 1048576).toFixed(1);
